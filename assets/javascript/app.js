@@ -1,17 +1,29 @@
+ // Initialize Firebase
+ var config = {
+   apiKey: 'AIzaSyDLk-BHKWaXv4zCAWa9Ekc51UalnuS5yjo',
+   authDomain: 'travelbook-1543375707755.firebaseapp.com',
+   databaseURL: 'https://travelbook-1543375707755.firebaseio.com',
+   projectId: 'travelbook-1543375707755',
+   storageBucket: 'travelbook-1543375707755.appspot.com',
+   messagingSenderId: '329432180812'
+ };
+ firebase.initializeApp(config);
+
+
 $(document).ready(function () {
 
     // Some APIs will give us a cross-origin (CORS) error. This small function is a fix for that error. You can also check out the chrome extenstion (https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en).
-    // jQuery.ajaxPrefilter(function (options) {
-    //   if (options.crossDomain && jQuery.support.cors) {
-    //     options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-    //   }
-    // });
+    jQuery.ajaxPrefilter(function (options) {
+      if (options.crossDomain && jQuery.support.cors) {
+        options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+      }
+    });
 
-    $(".yelp").on("submit", function () {
+    $(".yelp-submit").on("click", function () {
 
 
     //   //Will stop the page from refreshing so we can grab the values input by the user
-    //   event.preventDefault()
+      event.preventDefault()
 
     //   // grab a hold of the values the users input (the location and category)
     //   var location = $("#location").val();
