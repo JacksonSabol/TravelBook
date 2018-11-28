@@ -29,6 +29,7 @@ $(document).ready(function () {
     promise.catch(e => console.log(e.message));
   });
 
+
   //Add signup Event
   btnSignUp.addEventListener('click', e => {
     var email = txtEmail.value;
