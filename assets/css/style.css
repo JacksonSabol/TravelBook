@@ -21,11 +21,18 @@ body {
   font-family: 'Raleway', sans-serif;
 }
 
+img.auth-image{
+  padding: 20px;
+
+}
+
 h1,
 h2,
 h3,
 p {
   margin-bottom: 20px;
+
+  padding: 20px;
 }
 
 p:last-child {
@@ -119,7 +126,7 @@ footer {
   color: #ffffff;
   color: #cccccc;
   text-align: center;
-  background: #666666;
+  background: lightgray;
   border-top: 8px solid rgb(228, 43, 71);
 
 }
@@ -129,7 +136,7 @@ h3, h2 {
   padding-bottom: 20px;
   margin-bottom: 15px;
   line-height: 22px;
-  border-bottom: 2px solid darkslategray;
+  border-bottom: 2px solid black;
   font-family: 'Raleway', sans-serif;
 }
 
@@ -190,13 +197,12 @@ h3, h2 {
   float: left;
   width: 100%;
   max-width: 960px;
-  padding: 25px;
+  padding: 65px;
   margin: 0 0 30px;
   background: #ffffff;
-  border: 1px solid #dddddd;
   font-family: 'Raleway', sans-serif;
   line-height: 1.5;
-  color: darkslategray
+  color: black
 }
 
 /* portfolio page */
