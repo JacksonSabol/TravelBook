@@ -32,6 +32,7 @@
       margin: 10px auto;
       padding: 20px;
       height: 80vh;
+      float:left;
     }
 
     h2 {
@@ -40,12 +41,12 @@
     }
 
     p {
-      text-align: center;
+      text-align: left;
     }
 
     .thumbnail {
-      height: 200px;
-      width: 200px;
+      height: 100px;
+      width: 100px;
       border-radius: 100%;
       float: left;
     }
@@ -71,7 +72,6 @@
   </header>
 
 
-
   <div id="main-container" class="container">
     <section class="main-section">
       <h3>Welcome to our site.</h3>
@@ -80,43 +80,48 @@
 
         <input id="txtPassword" type="password" placeholder="Password">
         <button id="btnSignUp" class="btn btn-secondary">
-            Sign Up
+
+          Sign Up
         </button>
 
         <button id="btnLogin" class="btn btn-action">
-            Log in
+          Log in
         </button>
 
         <button id="btnLogOut" class="btn btn-action hide">
-            Log Out
+          Log Out
         </button>
 
-    </div>
-
-      
-
-      <div class="form-contain">
-        <h3 class="search-heading">Search for restaurants you liked in any city!</h3>
-        <form class="yelp">
-          <input placeholder="location" id="location" type="text">
-          <input placeholder="category" type="text" id="category">
-          <input type="submit" id="submit-search-form">
-        </form>
       </div>
-    
-      <div class="well"></div>
 
-      <h4><strong>Add some more information to your profile here:</strong></h4>
-      <ul>
-        <li>Name:</li>
-        <li></li>
-        <li>Hometown:</li>
-      </ul>
+      <div id="main-container" class="container">
+        <section class="main-section">
+          <h3>Welcome to our site.</h3>
 
 
-    </section>
 
-  </div>
+          <div class="form-contain">
+            <h3 class="search-heading">Search for restaurants you liked in any city!</h3>
+            <form class="yelp">
+              <input placeholder="location" id="location" type="text">
+              <input placeholder="category" type="text" id="category">
+              <input type="submit" id="submit-search-form">
+            </form>
+          </div>
+
+          <div class="well"></div>
+
+          <h4><strong>Add some more information to your profile here:</strong></h4>
+          <ul>
+            <li>Name:</li>
+            <li>Hometown:</li>
+            <li>Favorite cities to visit:</li>
+          </ul>
+
+
+        </section>
+
+      </div>
 
   </div>
 
