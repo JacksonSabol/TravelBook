@@ -1,0 +1,341 @@
+body {
+  
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  line-height: 34px;
+  color: #777777;
+  background: url("../images/concrete_seamless.png");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* general */
+
+.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  clear: both;
+  font-family: 'Raleway', sans-serif;
+}
+
+img.auth-image{
+  padding: 20px;
+
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-bottom: 20px;
+
+  padding: 20px;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Mali', cursive;
+  font-weight: 700;
+  color: red;
+  font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+  padding-bottom: 20px;
+  font-size: 30px;
+  line-height: 49px;
+  border-bottom: 3px solid #dddddd;
+  font-family: 'Raleway', sans-serif;
+}
+
+h2,
+h3 {
+  font-size: 22px;
+  font-family: 'Raleway', sans-serif;
+}
+
+/* header */
+
+#masthead {
+  position: fixed;
+  z-index: 99;
+  width: 100%;
+  margin: 0 0 30px;
+  overflow: auto;
+  color: #ffffff;
+  background: #ffffff;
+  border-bottom: 2px solid #cccccc;
+  font-family: 'Raleway', sans-serif;
+}
+
+#logo {
+  float: left;
+  width: 250px;
+  height: 90px;
+  font-family: 'Mali', cursive;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 90px;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  background: red;
+}
+.infosection{
+  margin-top: 25px;
+  font-family: 'Raleway', sans-serif;
+  float: left;
+}
+nav {
+  float: right;
+  margin-top: 25px;
+  font-family: 'Raleway', sans-serif;
+
+}
+
+nav a {
+  display: inline-block;
+  padding-left: 15px;
+  margin-left: 15px;
+  line-height: 18px;
+  color: red;
+  text-decoration: none;
+  border-left: 1px solid #efefef;
+  font-family: 'Raleway', sans-serif;
+  
+}
+
+nav a:first-child {
+  border-left: 0 none;
+}
+
+/* footer */
+
+footer {
+  padding: 14px 0;
+  clear: both;
+  font-size: 12px;
+  color: #ffffff;
+  color: #cccccc;
+  text-align: center;
+  background: lightgray;
+  border-top: 8px solid rgb(228, 43, 71);
+
+}
+
+
+h3, h2 {
+  padding-bottom: 20px;
+  margin-bottom: 15px;
+  line-height: 22px;
+  border-bottom: 2px solid black;
+  font-family: 'Raleway', sans-serif;
+}
+
+
+.fa {
+  padding: 15px;
+  font-size: 30px;
+  width: 40px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 50%;
+ 
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+
+.fa-google {
+  background: #dd4b39;
+  color: white;
+}
+
+.fa-linkedin {
+  background: #007bb5;
+  color: white;
+}
+
+.fa-instagram {
+  background: #125688;
+  color: white;
+}
+ 
+.fa-pinterest {
+  background: #cb2027;
+  color: white;
+}
+
+/* main */
+
+#main-container {
+  padding-top: 130px;
+  min-height: calc(100vh - 70px);
+  font-family: 'Raleway', sans-serif;
+}
+
+.main-section {
+  float: left;
+  width: 100%;
+  max-width: 960px;
+  padding: 65px;
+  margin: 0 0 30px;
+  background: #ffffff;
+  font-family: 'Raleway', sans-serif;
+  line-height: 1.5;
+  color: black
+}
+
+/* portfolio page */
+
+
+.work {
+  position: relative;
+  float: left;
+  width: 274px;
+  margin: 20px 0 25px;
+  overflow: auto;
+}
+
+.work:nth-child(even) {
+  margin-right: 40px;
+}
+
+.work img {
+  width: 100%;
+  border: 0 none;
+  opacity: 0.8;
+}
+
+.work h3 {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 0;
+  font-weight: 300;
+  line-height: 30px;
+  color: #ffffff;
+  text-align: center;
+  background: lightpink;
+  border-bottom: 0;
+}
+
+.auth-image {
+  float: left;
+  height: 230px;
+  width: 220px;
+  height: auto;
+  margin-top: 10px;
+  margin-right: 25px;
+}
+
+
+/* contact page */
+
+#contact-form ul {
+  margin-bottom: 20px;
+  font-family: 'Raleway', sans-serif;
+}
+
+#contact-form li {
+  margin-bottom: 10px;
+  font-family: 'Raleway', sans-serif;
+}
+
+label,
+input[type=text],
+input[type=email],
+textarea {
+  display: block;
+  width: 100%;
+  font-family: 'Raleway', sans-serif;
+}
+
+input[type=text],
+input[type=email],
+textarea {
+  height: 35px;
+  padding: 0 10px;
+  font-size: 14px;
+  border: 1px solid #dddddd;
+  font-family: 'Raleway', sans-serif;
+}
+
+textarea {
+  height: 200px;
+  font-family: 'Raleway', sans-serif;
+}
+
+input[type=submit] {
+  padding: 10px 30px;
+  font-size: 18px;
+  color: #ffffff;
+  cursor: pointer;
+  background: red;
+  border: 0 none;
+  font-family: 'Raleway', sans-serif;
+}
+
+
+@media screen and (max-width:980px) {
+    .main-section{
+        width: 70%;  
+    }
+    #masthead{
+        width: 100%
+    }
+}
+@media screen and (max-width:768px) {
+    .main-section{
+        width: 100%;
+    }
+}
+@media screen and (max-width:640px) {
+    #logo{
+        width:100%;
+    
+        text-align: center;
+}
+    nav{
+    text-align: center;
+    width:100%;
+}
+#masthead{
+    width:100%;
+}
+
+footer{
+  width: 100%;
+}
+}
+
+
+/*photo page*/
+.photopage{
+  padding:18px;
+  clear: both;
+}
+
+.div.row{
+padding: 5px;
+}
