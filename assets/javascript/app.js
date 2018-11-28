@@ -12,7 +12,7 @@ firebase.initializeApp(config);
 
 $(document).ready(function () {
   console.log("test");
-
+  
   // Some APIs will give us a cross-origin (CORS) error. This small function is a fix for that error. You can also check out the chrome extenstion (https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en).
   jQuery.ajaxPrefilter(function (options) {
     if (options.crossDomain && jQuery.support.cors) {
