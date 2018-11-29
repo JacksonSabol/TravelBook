@@ -5,6 +5,23 @@
   white-space: nowrap;
 }
 
+/*map*/
+/* Always set the map height explicitly to define the size of the div
+ * element that contains the map. */
+ #map {
+  height: 100%;
+}
+/* Optional: Makes the sample page fill the window. */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.glyphicon{
+  font-size: 35px;
+  color: red;
+}
 
 /* index*/
 
@@ -33,10 +50,12 @@ input {
 .well{
   overflow: auto;
   width: 100%;
-  display: block;
+
+  /* display: block;  */
+
   margin: 10px auto;
   padding: 20px;
-  height: 80vh;
+  height: 120vh;
   float:left;
   /* Remove BootStrap background image to let background color show through */
   /* https://stackoverflow.com/a/28387516/10503606 */
@@ -82,7 +101,6 @@ p, p.phone, p.address{
   margin: 0 auto;
   clear: both;
   font-family: 'Raleway', sans-serif;
-  background-color: white;
 }
 
 img.auth-image{
