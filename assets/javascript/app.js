@@ -11,6 +11,8 @@ $(document).ready(function () {
   };
   firebase.initializeApp(config);
 
+  var database = firebase.database();
+
   //Get elements
   var txtEmail = document.getElementById('txtEmail');
   var txtPassword = document.getElementById('txtPassword');
@@ -112,14 +114,7 @@ $(document).ready(function () {
     console.log(location);
     console.log(category);
 
-
-    // <!-- 
-    //         response.businesses[i].location.city -->
-
-
-    // Make an AJAX call to the Yelp API based on your research. 
-    // Try and get a response back that returns a series of business fitting 
-    // within a specified location and category.
+    // Make an AJAX call to the Yelp API with location and category as query parameters
 
     $.ajax({
       url: 'https://api.yelp.com/v3/businesses/search?location=' + location + '&term=' + category + '',
@@ -132,10 +127,62 @@ $(document).ready(function () {
 
 
       for (var i = 0; i < response.businesses.length; i++) {
+        // Assign variables to hold API information
+        var imgURL = response.businesses[i].image_url;
+        var businessName = response.businesses[i].name;
+        var businessPhone = response.businesses[i].display_phone;
+        var businessAddress = response.businesses[i].location.address1 + ', ' + response.businesses[i].location.city + ' ' + response.businesses[i].location.zip_code;
+        var businessURL = response.businesses[i].url;
 
+        // Dynamically generate a new table
+        var newTable = $("<table width='100%'>");
+        // Dynamically generate a table row to append cells to
+        var newRow = $("<tr>").attr({"class": "table-row-list", "width": "100%"});
+        // Dynamically generate a table cell to append information to
+        var leftCell = $("<td>").attr("width", "90%");
+        // Assign variable to dynamically generate a horizontal rule
+        var spacer = $("<hr>");
+        // Append image tag to leftCell
+        leftCell.append($("<img>").attr({"src": imgURL, "class": "thumbnailAPI", "alt": businessName}));
+        // Append business name to leftCell
+        leftCell.append($("<a>").attr({"href": businessURL, "class": "business-name", "target": "_blank"}).html("<h3 class=''>" + businessName + "</h3>"));
+        // Append business phone number to leftCell
+        leftCell.append($("<p>").attr("class", "phone").text(businessPhone));
+        // Append business address to leftCell
+        leftCell.append($("<p>").attr("class", "address").text(businessAddress));
+        // Dynamically generate a table cell to append an add button to
+        var rightCell = $("<td>").attr({"width": "10%", "align": "center"});
+        // Dynamically generate a button tag
+        var addBtn = $("<button>");
+        // Dynamically generate a span tag
+        var addSpan = $("<span>");
+        // Add class to button
+        addBtn.addClass("add-button");
+        // rightCell.attr("data-key", myKey);
+        // Add Bootstrap plus sign class to span
+        addSpan.addClass("glyphicon glyphicon-plus-sign");
+        // Add hide function to span
+        addSpan.attr("aria-hidden", "true");
+        // Append span to rightCell
+        addBtn.append(addSpan);
+        // Append button to rightCell
+        rightCell.append(addBtn);
+        // Append leftCell to newRow
+        newRow.append(leftCell);
+        // Append rightCell to newRow
+        newRow.append(rightCell);
+        // Append newRow to newTable
+        newTable.append(newRow, spacer);
+        // Append newTable to well div
+        $(".well").append(newTable);
         // Now that we're able to get the information we want, it's time to render it to the page.
-        $(".well").append('<img class="thumbnail" src="' + response.businesses[i].image_url + '"/><h2 class="name">' + response.businesses[i].name + '</h2><p class="phone">' + response.businesses[i].display_phone + '</p><p class="address">' + response.businesses[i].location.address1 + ', ' + response.businesses[i].location.city + ' ' + response.businesses[i].location.zip_code + '</p><hr><p class="url">' + response.businesses[i].url + '</p><hr>');
+        // $(".well").append('<img class="thumbnail" src="' + response.businesses[i].image_url + '"/><h2 class="name">' + response.businesses[i].name + '</h2><p class="phone">' + response.businesses[i].display_phone + '</p><p class="address">' + response.businesses[i].location.address1 + ', ' + response.businesses[i].location.city + ' ' + response.businesses[i].location.zip_code + '</p><a href="' + response.businesses[i].url + '" target="_blank"><p class="url">Link to Business</p><hr>');
       }
+
+
+
+
+
 
       // Add + button to the side of each item listed in the div well
       // + button when clicked will trigger a function
