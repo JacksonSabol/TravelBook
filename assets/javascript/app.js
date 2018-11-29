@@ -1,5 +1,48 @@
 $(document).ready(function () {
 
+
+  // This example requires the Places library. Include the libraries=places
+// // parameter when you first load the API. For example:
+// <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8&libraries=places"></script>
+
+// https://maps.googleapis.com/maps/api/place/nearbysearch/json
+//   ?location=-33.8670522,151.1957362
+//   &radius=500
+//   &types=food
+//   &name=harbour
+//   &key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8
+
+// function initMap() {
+//   var map = new google.maps.Map(document.getElementById('map'), {
+//     center: {lat: -33.866, lng: 151.196},
+//     zoom: 15
+//   });
+// console.log("hello");
+
+//   var infowindow = new google.maps.InfoWindow();
+//   var service = new google.maps.places.PlacesService(map);
+
+//   service.getDetails({
+//     placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
+//   }, function(place, status) {
+//     if (status === google.maps.places.PlacesServiceStatus.OK) {
+//       var marker = new google.maps.Marker({
+//         map: map,
+//         position: place.geometry.location
+//       });
+//       google.maps.event.addListener(marker, 'click', function() {
+//         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+//           'Place ID: ' + place.place_id + '<br>' +
+//           place.formatted_address + '</div>');
+//         infowindow.open(map, this);
+//       });
+//     }
+//   });
+// }
+
+// // hide well when page loads
+  $(".well").hide();
+
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyDLk-BHKWaXv4zCAWa9Ekc51UalnuS5yjo",
@@ -48,6 +91,7 @@ $(document).ready(function () {
   });
 
   // btnLogout.addEventListener('click', e => {
+  //   event.preventDefault() 
   //   firebase.auth().signOut();
   //   //Add a real time listener
   //   firebase.auth().onAuthStateChanged(function (user) {
@@ -59,7 +103,7 @@ $(document).ready(function () {
   //     }
   //   });
 
-  //const auth = firebase.auth();
+  // const auth = firebase.auth();
   // auth.signInWithEmailAndPassword(email, pass);
   // auth.createUserWithEmailAndPassword(email, pass);
   // auth.onAuthStateChanged(firebaseUser => { });
@@ -74,6 +118,8 @@ $(document).ready(function () {
   // ------------------------------------ profile page ------------------------------------
   $("#yelp-submit").on("click", function () {
     event.preventDefault();
+
+
     // grab a hold of the values the users input (the location and category)
     var location = $("#location").val();
     // Start with category of restaurants for testing
@@ -100,8 +146,15 @@ $(document).ready(function () {
     });
   });
 
+
+
+
   // --------------------- index page ------------------------------------
   $("#submit-search-form").on("click", function () {
+
+
+// show well when submit button is cliked
+$(".well").show();
 
     //Will stop the page from refreshing so we can grab the values input by the user
     event.preventDefault()
@@ -113,6 +166,7 @@ $(document).ready(function () {
     // Console.log() the values and see if they match what you entered into the form.
     console.log(location);
     console.log(category);
+
 
     // Make an AJAX call to the Yelp API with location and category as query parameters
 

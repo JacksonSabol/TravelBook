@@ -12,9 +12,8 @@ https://maps.googleapis.com/maps/api/place/nearbysearch/json
   &radius=500
   &types=food
   &name=harbour
-  &key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8
-
-  AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8 -- maps
+  &key=
+AIzaSyBhJlQHvH5eKFMF847xmHIf3-cktkOPwJA -- maps
 
 -make the api call to yelp, then google afterwards.
 
