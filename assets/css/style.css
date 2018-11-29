@@ -1,14 +1,77 @@
-body {
-  
-  font-family: 'Raleway', sans-serif;
-  font-size: 18px;
-  line-height: 34px;
-  color: #777777;
-  /* background: url("../images/concrete_seamless.png"); */
+
+.table-row-list {
+  width: 100%;
+  box-sizing: content-box;
+  white-space: nowrap;
 }
 
-* {
-  box-sizing: border-box;
+
+/* index*/
+
+#main-container {
+  padding-top: 130px;
+  min-height: calc(100vh - 70px);
+  font-family: 'Raleway', sans-serif;
+  background-color: #ffffff;
+}
+
+.main-section {
+  float: left;
+  width: 100%;
+  padding: 25px;
+  margin: 0 0 30px;
+  background-color: #ffffff;
+  font-family: 'Raleway', sans-serif;
+  line-height: 1.5;
+  color: black
+}
+input {
+  display: block;
+  margin: 10px;
+}
+
+.well{
+  overflow: auto;
+  width: 100%;
+  display: block;
+  margin: 10px auto;
+  padding: 20px;
+  height: 80vh;
+  float:left;
+  /* Remove BootStrap background image to let background color show through */
+  /* https://stackoverflow.com/a/28387516/10503606 */
+  background-image: none;
+  background-color: #ffffff;
+}
+
+
+p, p.phone, p.address{
+  text-align: left;
+  font-family: 'Raleway', sans-serif;
+  font-size: 19px;
+  line-height: 20px;
+  font-size: 14px;
+  color: black;
+  margin-bottom: 0px; 
+}
+
+
+.thumbnailAPI {
+  height: 70px;
+  width: 70px;
+  border-radius: 100%;
+  float: left;
+  margin-right: 20px;
+
+}
+
+.add-button {
+  border-style: none;
+  background: none;
+}
+
+.address {
+  margin-bottom: 50px;
 }
 
 /* general */
@@ -19,20 +82,12 @@ body {
   margin: 0 auto;
   clear: both;
   font-family: 'Raleway', sans-serif;
+  background-color: white;
 }
 
 img.auth-image{
-  padding: 20px;
+  padding: 10px;
 
-}
-
-h1,
-h2,
-h3,
-p {
-  margin-bottom: 20px;
-
-  padding: 20px;
 }
 
 p:last-child {
@@ -41,24 +96,33 @@ p:last-child {
 
 h1,
 h2,
-h3 {
+{
   font-family: 'Mali', cursive;
   font-weight: 700;
+  text-align: center;
   color: red;
   font-family: 'Raleway', sans-serif;
+  
+}
+
+h2, h3{
+font-family: 'Mali', cursive;
+font-weight: 700;
+color: red;
+font-family: 'Raleway', sans-serif;
+border-bottom: none;
+font-size: 18px;
+margin-top: 2px;
+margin-bottom: 2px;
+padding-left: 10px;
+text-align: left;
 }
 
 h1 {
-  padding-bottom: 20px;
+  padding-bottom: 15px;
   font-size: 30px;
-  line-height: 49px;
-  border-bottom: 3px solid #dddddd;
-  font-family: 'Raleway', sans-serif;
-}
-
-h2,
-h3 {
-  font-size: 22px;
+  line-height: 20px;
+  border-bottom: 2px solid #dddddd;
   font-family: 'Raleway', sans-serif;
 }
 
@@ -89,11 +153,7 @@ h3 {
   text-decoration: none;
   background: red;
 }
-.infosection{
-  margin-top: 25px;
-  font-family: 'Raleway', sans-serif;
-  float: left;
-}
+
 nav {
   float: right;
   margin-top: 25px;
@@ -127,17 +187,8 @@ footer {
   color: #cccccc;
   text-align: center;
   background: lightgray;
-  border-top: 8px solid rgb(228, 43, 71);
+  border-top: 4px solid rgb(228, 43, 71);
 
-}
-
-
-h3, h2 {
-  padding-bottom: 20px;
-  margin-bottom: 15px;
-  line-height: 22px;
-  border-bottom: 2px solid black;
-  font-family: 'Raleway', sans-serif;
 }
 
 
@@ -185,25 +236,6 @@ h3, h2 {
   color: white;
 }
 
-/* main */
-
-#main-container {
-  padding-top: 130px;
-  min-height: calc(100vh - 70px);
-  font-family: 'Raleway', sans-serif;
-}
-
-.main-section {
-  float: left;
-  width: 100%;
-  max-width: 960px;
-  padding: 65px;
-  margin: 0 0 30px;
-  background: #ffffff;
-  font-family: 'Raleway', sans-serif;
-  line-height: 1.5;
-  color: black
-}
 
 /* portfolio page */
 
@@ -230,13 +262,11 @@ h3, h2 {
   position: absolute;
   bottom: 20px;
   width: 100%;
-  padding: 15px;
   margin-bottom: 0;
   font-weight: 300;
-  line-height: 30px;
   color: #ffffff;
   text-align: center;
-  background: lightpink;
+  background: red;
   border-bottom: 0;
 }
 
