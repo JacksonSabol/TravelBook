@@ -56,59 +56,46 @@ $(document).ready(function () {
 
   var database = firebase.database();
 
-  // Assign variables to hold values in the input fields
-  var txtEmail = document.getElementById('txtEmail');
-  var txtPassword = document.getElementById('txtPassword');
-  var btnSignUp = document.getElementById('btnSignUp');
-  var btnLogout = document.getElementById('btnLogout');
+  //----------------Pete and Maira----------------------------------
+  $("#myModal").modal('show');
 
   //Add login event
-  $("body").on("click", "#btnLogin", function () {
-    event.preventDefault()
-    //Get email and password
-    var email = txtEmail.value;
-    var pass = txtPassword.value;
+  $("body").on("click", "#login-button", function () {
+    event.preventDefault();
+    console.log("Hi. I hear you");
+    // Get e-mail and pass
+    var email = $("#input-email").val();
+    var password = $("#input-password").val();
     var auth = firebase.auth();
-    //Sign in
-    var promise = auth.signInWithEmailAndPassword(email, pass);
-    promise.catch(e => console.log(e.message));
+    var promise = auth.signInWithEmailAndPassword(email, password);
+    promise.catch(e => alert(e.message));
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
   });
-
-
   //Add signup Event
-  $("body").on("click", "#btnSignUp", function () {
-    event.preventDefault()
-    var email = txtEmail.value;
-    var pass = txtPassword.value;
+  $("body").on("click", "#signup-button", function () {
+    event.preventDefault();
+    console.log("Hi. I hear you");
+    // Get e-mail and pass
+    var email = $("#input-email").val();
+    var password = $("#input-password").val();
     var auth = firebase.auth();
 
-    var promise = auth.createUserWithEmailAndPassword(email, pass);
-    promise.catch(e => {
-      // Console log "Email already exists"
-      console.log(e.message);
-      // Hide sign up button since user is already authenticated
-      btnSignUp.classList.add('hide');
-    });
-  });
+    var promise = auth.createUserWithEmailAndPassword(email, password);
+    promise
+      .catch(e => console.log(e.message));
+  })
 
-  $("body").on("click", "#btnLogout", function () {
-    event.preventDefault()
-    firebase.auth().signOut();
-    //Add a real time listener
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        console.log(firebase);
-        btnLogout.classList.remove('hide');
-      } else {
-        console.log('not logged in');
-      }
-    });
-  });
-
-  // const auth = firebase.auth();
-  // auth.signInWithEmailAndPassword(email, pass);
-  // auth.createUserWithEmailAndPassword(email, pass);
-  // auth.onAuthStateChanged(firebaseUser => { });
+  firebase.auth().onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+      console.log(firebaseUser);
+      //$('#myModal').hide();
+    } else {
+      console.log('not logged in');
+    }
+  })
+  //---------------------------------------------------------------------------------
 
   // Some APIs will give us a cross-origin (CORS) error. This small function is a fix for that error. You can also check out the chrome extenstion (https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en).
   jQuery.ajaxPrefilter(function (options) {
@@ -118,7 +105,7 @@ $(document).ready(function () {
   });
 
 
-  // --------------------- index page ------------------------------------
+  // --------------------- index page --------------------------------------------------------------------------------
   $("#submit-search-form").on("click", function () {
 
 
@@ -216,12 +203,33 @@ $(document).ready(function () {
   });
   // Add "interest" on click of plus button
   $("body").on("click", ".add-button", function () {
-    // Assifn variable to hold business ID to add to Firebase that's stored in this button's data-id
+
+
+    // Assign variable to hold business ID to add to Firebase that's stored in this button's data-id
     var idToAdd = $(this).attr("data-id");
     // Assign variable to hold business city data value
     var cityToAdd = $(this).attr("data-city");
-    // Push business ID and city to Firebase
-    database.ref().push(cityToAdd);
+
+    // Pull data down from Firebase to compare
+    database.ref().on("value", function (snapshot) {
+      var businessCity = snapshot.val();
+
+      // Set conditional to create new bucket if bucket does not exist - create new bucket with city name
+      if (businessCity.exists()) {
+        database.ref("/bucketData").push({
+          businessID: idToAdd,
+          businessCity: cityToAdd,
+        });
+
+        // if bucket with businessCity name exists, add 
+      } else {
+        database.ref()
+      }
+      // Push business ID and city to Firebase
+      database.ref().push(cityToAdd);
+
+
+    });
   });
 
 
