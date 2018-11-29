@@ -18,7 +18,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Mali|Raleway" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  
+
 </head>
 
 
@@ -42,13 +42,21 @@
 
   <!-- </div> -->
 
-  <div id="main-container" class="container">
+  <div class="container">
     <br>
-    <h1>Travel Recommendations</h1>
+    <div id="main-container-profile">
+      <h2>User Name</h2><br>
+      <img src="https://via.placeholder.com/175" class="profile-pic" alt="User Name"><br>
+      <h2>About Me</h2>
+      <span contenteditable="true">
+        What are your all-time favorite cities you've visited?
+        <br>
+        This text can be edited by the user.
+      </span>
+    </div>
 
 
-    <h2>About Me</h2>
-    <div>
+    <!-- <div>
       <h4><strong>Currently live in:</strong></h4>
       <ul>
         <li>Copenhagen, Denmark</li>
@@ -59,50 +67,27 @@
             type="submit" class="btn btn-default" id="google-submit" data-name="nashville">Google</button></li>
         <li>Amsterdam, Netherlands</li>
         <li>Moterosso, Italy </li>
-      </ul>
+      </ul> -->
 
 
-    </div>
-    <div class="container">
+
+    <div class="travel-recc">
+
+      <h1>Travel Recommendations</h1>
 
       <div class="row">
-        <!--1 of 6 columns-->
-        <div class="col-lg-4 col-md-6 col-sm-12">
-          <div class="work">
-            <a href="linkgoeshere" target="_blank">
-              <img src="assets/photos/logo.png" alt="Building a wireframe" class="responsive">
-            </a>
-            <h3>Paris</h3>
-          </div>
-        </div>
-
-
-
-        <!--2 of 5 columns-->
-        <div class="col-lg-4 col-md-6 col-sm-12">
-          <div class="work">
-            <a href="linkgoeshere/" target="_blank">
-              <img src="assets/photos/logo.png" alt="Word-Guess-Game" class="responsive">
-            </a>
-            <h3>Denver</h3>
-          </div>
-        </div>
-
-        <!--3 of 5 columns-->
-        <div class="col-lg-4 col-md-6 col-sm-12">
-
-          <div class="work">
-            <a href="link" target="_blank">
-              <img src="assets/photos/logo.png" alt="Crystals Game" class="responsive">
-            </a>
-            <h3>San Francisco</h3>
-          </div>
-        </div>
-
-
+        <div class="buckets"></div>
       </div>
+      <!-- <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="work">
+          <a href="link" target="_blank">
+            <img src="assets/photos/logo.png" alt="Crystals Game" class="responsive">
+          </a>
+          <h3>San Francisco</h3>
+        </div>
+      </div>
+    </div> -->
     </div>
-  </div>
   </div>
 
 
