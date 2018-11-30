@@ -1,45 +1,6 @@
 $(document).ready(function () {
 
 
-  // This example requires the Places library. Include the libraries=places
-  // // parameter when you first load the API. For example:
-  // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8&libraries=places"></script>
-
-  // https://maps.googleapis.com/maps/api/place/nearbysearch/json
-  //   ?location=-33.8670522,151.1957362
-  //   &radius=500
-  //   &types=food
-  //   &name=harbour
-  //   &key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8
-
-  // function initMap() {
-  //   var map = new google.maps.Map(document.getElementById('map'), {
-  //     center: {lat: -33.866, lng: 151.196},
-  //     zoom: 15
-  //   });
-  // console.log("hello");
-
-  //   var infowindow = new google.maps.InfoWindow();
-  //   var service = new google.maps.places.PlacesService(map);
-
-  //   service.getDetails({
-  //     placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
-  //   }, function(place, status) {
-  //     if (status === google.maps.places.PlacesServiceStatus.OK) {
-  //       var marker = new google.maps.Marker({
-  //         map: map,
-  //         position: place.geometry.location
-  //       });
-  //       google.maps.event.addListener(marker, 'click', function() {
-  //         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-  //           'Place ID: ' + place.place_id + '<br>' +
-  //           place.formatted_address + '</div>');
-  //         infowindow.open(map, this);
-  //       });
-  //     }
-  //   });
-  // }
-
   // // hide well when page loads
   $(".well").hide();
 
@@ -57,44 +18,52 @@ $(document).ready(function () {
   var database = firebase.database();
 
   //----------------Pete and Maira----------------------------------
-  $("#myModal").modal('show');
 
-  //Add login event
-  $("body").on("click", "#login-button", function () {
+
+  $("body").on("click", "#loginSignUp", function () {
     event.preventDefault();
-    console.log("Hi. I hear you");
-    // Get e-mail and pass
-    var email = $("#input-email").val();
-    var password = $("#input-password").val();
-    var auth = firebase.auth();
-    var promise = auth.signInWithEmailAndPassword(email, password);
-    promise.catch(e => alert(e.message));
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
+    // Show LogIn modal on click of login button
+    $("#loginModal").modal('show');
+
+    //Add login event
+    $("body").on("click", "#login-button", function () {
+      event.preventDefault();
+      console.log("Hi. I hear you");
+      // Get e-mail and pass
+      var email = $("#input-email").val();
+      var password = $("#input-password").val();
+      var auth = firebase.auth();
+      var promise = auth.signInWithEmailAndPassword(email, password);
+      promise.catch(e => alert(e.message));
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+    });
+    //Add signup Event
+    $("body").on("click", "#signup-button", function () {
+      event.preventDefault();
+      console.log("Hi. I hear you");
+      // Get e-mail and pass
+      var email = $("#input-email").val();
+      var password = $("#input-password").val();
+      var auth = firebase.auth();
+
+      var promise = auth.createUserWithEmailAndPassword(email, password);
+      promise
+        .catch(e => console.log(e.message));
+    });
+    // When authorization state changes, run function to get firebase user data back
+    // So whatever data is coming back from 
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if (firebaseUser) {
+        console.log(firebaseUser);
+        console.log(firebaseUser.uid);
+        //$('#myModal').hide();
+      } else {
+        console.log('not logged in');
+      }
+    })
   });
-  //Add signup Event
-  $("body").on("click", "#signup-button", function () {
-    event.preventDefault();
-    console.log("Hi. I hear you");
-    // Get e-mail and pass
-    var email = $("#input-email").val();
-    var password = $("#input-password").val();
-    var auth = firebase.auth();
-
-    var promise = auth.createUserWithEmailAndPassword(email, password);
-    promise
-      .catch(e => console.log(e.message));
-  })
-
-  firebase.auth().onAuthStateChanged(firebaseUser => {
-    if (firebaseUser) {
-      console.log(firebaseUser);
-      //$('#myModal').hide();
-    } else {
-      console.log('not logged in');
-    }
-  })
   //---------------------------------------------------------------------------------
 
   // Some APIs will give us a cross-origin (CORS) error. This small function is a fix for that error. You can also check out the chrome extenstion (https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en).
@@ -216,7 +185,7 @@ $(document).ready(function () {
 
       // Set conditional to create new bucket if bucket does not exist - create new bucket with city name
       if (businessCity.exists()) {
-        database.ref("/bucketData").push({
+        database.ref("/" + firebase.uid).push({
           businessID: idToAdd,
           businessCity: cityToAdd,
         });
@@ -232,6 +201,45 @@ $(document).ready(function () {
     });
   });
 
+
+  // This example requires the Places library. Include the libraries=places
+  // // parameter when you first load the API. For example:
+  // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8&libraries=places"></script>
+
+  // https://maps.googleapis.com/maps/api/place/nearbysearch/json
+  //   ?location=-33.8670522,151.1957362
+  //   &radius=500
+  //   &types=food
+  //   &name=harbour
+  //   &key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8
+
+  // function initMap() {
+  //   var map = new google.maps.Map(document.getElementById('map'), {
+  //     center: {lat: -33.866, lng: 151.196},
+  //     zoom: 15
+  //   });
+  // console.log("hello");
+
+  //   var infowindow = new google.maps.InfoWindow();
+  //   var service = new google.maps.places.PlacesService(map);
+
+  //   service.getDetails({
+  //     placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
+  //   }, function(place, status) {
+  //     if (status === google.maps.places.PlacesServiceStatus.OK) {
+  //       var marker = new google.maps.Marker({
+  //         map: map,
+  //         position: place.geometry.location
+  //       });
+  //       google.maps.event.addListener(marker, 'click', function() {
+  //         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+  //           'Place ID: ' + place.place_id + '<br>' +
+  //           place.formatted_address + '</div>');
+  //         infowindow.open(map, this);
+  //       });
+  //     }
+  //   });
+  // }
 
   // ------------------------------------ profile page ------------------------------------
 
