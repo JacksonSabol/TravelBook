@@ -54,11 +54,11 @@ $(document).ready(function () {
     // $('#loginSignUp').removeClass("hide");
   });
 
-
   $("body").on("click", "#loginSignUp", function () {
     event.preventDefault();
     // Show LogIn modal on click of login button
     $("#loginModal").modal('show');
+
   });
 
   //Add signup Event
@@ -114,6 +114,47 @@ $(document).ready(function () {
         // $('#messageModalLabel').html(spanText("ERROR: Passwords didn't match", ['danger']))
       }
     }
+  });
+
+
+    //Add login event
+    $("body").on("click", "#login-button", function () {
+      event.preventDefault();
+      console.log("Hi. I hear you");
+      // Get e-mail and pass
+      var email = $("#input-email").val();
+      var password = $("#input-password").val();
+      var auth = firebase.auth();
+      var promise = auth.signInWithEmailAndPassword(email, password);
+      promise.catch(e => alert(e.message));
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+    });
+    //Add signup Event
+    $("body").on("click", "#signup-button", function () {
+      event.preventDefault();
+      console.log("Hi. I hear you");
+      // Get e-mail and pass
+      var email = $("#input-email").val();
+      var password = $("#input-password").val();
+      var auth = firebase.auth();
+
+      var promise = auth.createUserWithEmailAndPassword(email, password);
+      promise
+        .catch(e => console.log(e.message));
+    });
+    // When authorization state changes, run function to get firebase user data back
+    // So whatever data is coming back from 
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if (firebaseUser) {
+        console.log(firebaseUser);
+        console.log(firebaseUser.uid);
+        //$('#myModal').hide();
+      } else {
+        console.log('not logged in');
+      }
+    })
   });
 
   // Add "interest" on click of plus button
@@ -374,7 +415,6 @@ $(document).ready(function () {
   //     businessCity: cityToAdd,
   //   });
 
-
   // if (typeof maybeObject != "undefined") {
   // alert("GOT THERE");
   // }
@@ -391,7 +431,6 @@ $(document).ready(function () {
   //   businessName: bizNameToAdd
   // });
   // });
-
 
 
   // This example requires the Places library. Include the libraries=places
