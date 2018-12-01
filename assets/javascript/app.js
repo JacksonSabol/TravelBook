@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+  var userFirebaseObject;
 
   // // hide well when page loads
   $(".well").hide();
@@ -15,15 +16,106 @@ $(document).ready(function () {
   };
   firebase.initializeApp(config);
 
+  var Auth = firebase.auth();
   var database = firebase.database();
+  var interestRef = database.ref('Interests')
+  var usersRef = database.ref('Users')
+  var auth = null;
 
-  //----------------Pete and Maira----------------------------------
+  // Login
+  $('.login-button').on('submit', function (e) {
+    e.preventDefault();
+    $('#loginModal').modal('hide');
+    // $('#messageModalLabel').html(spanText('<i class="fa fa-cog fa-spin"></i>', ['center', 'info']));
+    // $('#messageModal').modal('show');
 
+    if (($('#loginEmail').val() != "") && ($('#loginPassword').val() != "")) {
+      //login the user
+      var data = {
+        email: $('#loginEmail').val(),
+        password: $('#loginPassword').val()
+      };
+      firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+        .then(function (authData) {
+          auth = authData;
+          // $('#messageModalLabel').html(spanText('Success!', ['center', 'success']))
+          // $('#messageModal').modal('hide');
+        })
+        .catch(function (error) {
+          console.log("Login Failed!", error);
+          // $('#messageModalLabel').html(spanText('ERROR: ' + error.code, ['danger']))
+        });
+    }
+  });
+
+  $('#logout').on('click', function (e) {
+    e.preventDefault();
+    firebase.auth().signOut()
+    // $('#loginSignUp').removeClass("hide");
+  });
 
   $("body").on("click", "#loginSignUp", function () {
     event.preventDefault();
     // Show LogIn modal on click of login button
     $("#loginModal").modal('show');
+
+  });
+
+  //Add signup Event
+  $("body").on("click", "#signup-button", function () {
+    event.preventDefault();
+    console.log("Hi. I hear you");
+    // Get e-mail and pass
+    var data = {
+      email: $("#registerEmail").val(),
+      password: $("#registerPassword").val(),
+      firstName: $('#registerFirstName').val(), // get firstName
+      lastName: $('#registerLastName').val(), // get lastName
+    };
+
+    var passwords = {
+      password: $("#registerPassword").val(),
+      cPassword: $('#registerConfirmPassword').val(), //get the confirmPass from Form
+
+    }
+    // if password 1 matches confirm password then create the user
+    if (data.email != '' && passwords.password != '' && passwords.cPassword != '') {
+      if (passwords.password == passwords.cPassword) {
+
+
+        //create the user
+
+        firebase.auth()
+          .createUserWithEmailAndPassword(data.email, passwords.password)
+          .then(function (user) {
+            return user.updateProfile({
+              displayName: data.firstName + ' ' + data.lastName
+            })
+          })
+          .then(function (user) {
+            //now user is needed to be logged in to save data
+            auth = user;
+            //now saving the profile data
+            usersRef.child(user.uid).set(data)
+              .then(function () {
+                console.log("User Information Saved:", user.uid);
+              })
+            // $('#messageModalLabel').html(spanText('Success!', ['center', 'success']))
+
+            // $('#messageModal').modal('hide');
+          })
+          .catch(function (error) {
+            console.log("Error creating user:", error);
+            // $('#messageModalLabel').html(spanText('ERROR: ' + error.code, ['danger']))
+          });
+      } else {
+        //password and confirm password didn't match
+        console.log("ERROR: Passwords didn't match");
+        // $('#messageModalLabel').html(spanText("ERROR: Passwords didn't match", ['danger']))
+      }
+    }
+  });
+
 
     //Add login event
     $("body").on("click", "#login-button", function () {
@@ -64,8 +156,99 @@ $(document).ready(function () {
       }
     })
   });
-  //---------------------------------------------------------------------------------
 
+  // Add "interest" on click of plus button
+  $("body").on("click", "add-button", function (event) {
+    event.preventDefault();
+    if (auth != null) {
+      interestRef.child(auth.uid)
+        .push({
+          name: $(this).attr("data-biz-name"),
+          phone: $(this).attr("data-biz-phone"),
+          businessID: $(this).attr("data-id"),
+          businessCity: $(this).attr("data-city")
+        });
+    }
+    else {
+      $("#loginModal").modal('show');
+    }
+
+
+    // Modal prompting user to Log In
+    // $('#loginModal').modal('show');
+    // Assign variable to hold business ID to add to Firebase that's stored in this button's data-id
+    var idToAdd = $(this).attr("data-id");
+    // Assign variable to hold business city data value
+    var cityToAdd = $(this).attr("data-city");
+    // Assign variable to hold business city data value
+    var bizNameToAdd = $(this).attr("data-biz-name");
+    // Assign variable to hold business city data value
+    var bizAddressToAdd = $(this).attr("data-biz-address");
+    // Assign variable to hold business phone data value
+    var phoneToAdd = $(this).attr("data-biz-phone");
+    // Pull data down from Firebase to compare
+    // database.ref().on("" function (snapshot) {
+    //   userKey = snapshot.key;
+
+    // Set conditional to create new bucket if bucket does not exist - create new bucket with city name
+    // if (businessCity.exists()) {
+    //   database.ref("/" + firebase.uid).push({
+    //     businessID: idToAdd,
+    //     businessCity: cityToAdd,
+    //   });
+
+
+    // if (typeof maybeObject != "undefined") {
+    // alert("GOT THERE");
+    // }
+
+    // if bucket with businessCity name exists, add 
+    // } else {
+    //   database.ref("/" + firebase.uid)
+    // }
+
+    // });
+    // Push business ID and city to Firebase
+    // database.ref().child(user.uid).update({
+    //   businessCity: cityToAdd,
+    //   businessName: bizNameToAdd
+    // });
+  });
+
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      auth = user;
+      // $('body').removeClass('auth-false').addClass('auth-true');
+      usersRef.child(user.uid).once('value').then(function (data) {
+        var info = data.val();
+        if (user.photoUrl) {
+          $('.user-info img').show();
+          $('.user-info img').attr('src', user.photoUrl);
+          $('.user-info .user-name').hide();
+        }
+        else if (user.displayName) {
+          // $('.user-info img').hide();
+          $('#user-name').append('<span class="user-name">Welcome: ' + user.displayName + '</span>');
+        }
+        else if (info.firstName) {
+          // $('.user-info img').hide();
+          $('#user-name').append('<span class="user-name">' + info.firstName + '</span>');
+        }
+      });
+      interestRef.child(user.uid).on('child_added', onChildAdd);
+    }
+    else {
+      // No user is signed in.
+      // $('body').removeClass('auth-true').addClass('auth-false');
+      auth && interestsRef.child(auth.uid).off('child_added', onChildAdd);
+      $('#user-name').html('');
+      auth = null;
+    }
+  });
+  function onChildAdd(snap) {
+    console.log(snap);
+    // $('#contacts').append(contactHtmlFromObject(snap.key, snap.val()));
+  }
   // Some APIs will give us a cross-origin (CORS) error. This small function is a fix for that error. You can also check out the chrome extenstion (https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en).
   jQuery.ajaxPrefilter(function (options) {
     if (options.crossDomain && jQuery.support.cors) {
@@ -75,6 +258,24 @@ $(document).ready(function () {
 
 
   // --------------------- index page --------------------------------------------------------------------------------
+  // Toggle Sign up Modal if not a member
+  $("body").on("click", "#toggleSignUpModal", function () {
+    event.preventDefault();
+    // Hide loginModal
+    $("#loginModal").modal('hide');
+    // Show Sign Up modal on click of Sign Up link
+    $("#signUpModal").modal('show');
+  });
+
+  // Toggle Log in Modal if already a member
+  $("body").on("click", "#toggleLogInModal", function () {
+    event.preventDefault();
+    // Hide loginModal
+    $("#signUpModal").modal('hide');
+    // Show Sign Up modal on click of Sign Up link
+    $("#loginModal").modal('show');
+  });
+
   $("#submit-search-form").on("click", function () {
 
 
@@ -91,14 +292,12 @@ $(document).ready(function () {
     // Console.log() the values and see if they match what you entered into the form.
     console.log(location);
     console.log(category);
-    //================================new===================//
 
     // Add conditionals to make sure at least one field is filled 
     if (location === "") {
       $('#emptyField').modal('show');
     }
     else {
-      //================================end new===================//
 
       // Make an AJAX call to the Yelp API with location and category as query parameters
 
@@ -141,7 +340,7 @@ $(document).ready(function () {
           // Dynamically generate a table cell to append an add button to
           var rightCell = $("<td>").attr({ "width": "10%", "align": "center" });
           // Dynamically generate a button tag
-          var addBtn = $("<button>");
+          var addBtn = $("<button type='submit'>");
           // Dynamically generate a span tag
           var addSpan = $("<span>");
           // Add class to button
@@ -150,6 +349,12 @@ $(document).ready(function () {
           addBtn.attr("data-id", businessID);
           // Add business city to button to add to Firebase on click of plus sign
           addBtn.attr("data-city", businessCity);
+          // Add business name to button to add to Firebase on click of plus sign
+          addBtn.attr("data-biz-name", businessName);
+          // Add business address to button to add to Firebase on click of plus sign
+          addBtn.attr("data-biz-address", businessAddress);
+          // Add business phone to button to add to Firebase on click of plus sign
+          addBtn.attr("data-biz-phone", businessPhone);
           // Add Bootstrap plus sign class to span
           addSpan.addClass("glyphicon glyphicon-plus-sign");
           // Add hide function to span
@@ -170,36 +375,62 @@ $(document).ready(function () {
       });
     }
   });
+
   // Add "interest" on click of plus button
-  $("body").on("click", ".add-button", function () {
+  // $("body").on("click", ".add-button", function () {
+  // // if (auth != null) {
+  // interestRef.child(auth.uid)
+  //   .push({
+  //     name: $(this).attr("data-biz-name"),
+  //     phone: $(this).attr("data-biz-phone"),
+  //     businessID: $(this).attr("data-id"),
+  //     businessCity: $(this).attr("data-city")
+  //   });
+  // }
+  // else {
+  //   $("#loginModal").modal('show');
+  // }
 
 
-    // Assign variable to hold business ID to add to Firebase that's stored in this button's data-id
-    var idToAdd = $(this).attr("data-id");
-    // Assign variable to hold business city data value
-    var cityToAdd = $(this).attr("data-city");
+  // Modal prompting user to Log In
+  // $('#loginModal').modal('show');
+  // Assign variable to hold business ID to add to Firebase that's stored in this button's data-id
+  // var idToAdd = $(this).attr("data-id");
+  // // Assign variable to hold business city data value
+  // var cityToAdd = $(this).attr("data-city");
+  // // Assign variable to hold business city data value
+  // var bizNameToAdd = $(this).attr("data-biz-name");
+  // // Assign variable to hold business city data value
+  // var bizAddressToAdd = $(this).attr("data-biz-address");
+  // // Assign variable to hold business phone data value
+  // var phoneToAdd = $(this).attr("data-biz-phone");
+  // Pull data down from Firebase to compare
+  // database.ref().on("" function (snapshot) {
+  //   userKey = snapshot.key;
 
-    // Pull data down from Firebase to compare
-    database.ref().on("value", function (snapshot) {
-      var businessCity = snapshot.val();
+  // Set conditional to create new bucket if bucket does not exist - create new bucket with city name
+  // if (businessCity.exists()) {
+  //   database.ref("/" + firebase.uid).push({
+  //     businessID: idToAdd,
+  //     businessCity: cityToAdd,
+  //   });
 
-      // Set conditional to create new bucket if bucket does not exist - create new bucket with city name
-      if (businessCity.exists()) {
-        database.ref("/" + firebase.uid).push({
-          businessID: idToAdd,
-          businessCity: cityToAdd,
-        });
+  // if (typeof maybeObject != "undefined") {
+  // alert("GOT THERE");
+  // }
 
-        // if bucket with businessCity name exists, add 
-      } else {
-        database.ref()
-      }
-      // Push business ID and city to Firebase
-      database.ref().push(cityToAdd);
+  // if bucket with businessCity name exists, add 
+  // } else {
+  //   database.ref("/" + firebase.uid)
+  // }
 
-
-    });
-  });
+  // });
+  // Push business ID and city to Firebase
+  // database.ref().child(user.uid).update({
+  //   businessCity: cityToAdd,
+  //   businessName: bizNameToAdd
+  // });
+  // });
 
 
   // This example requires the Places library. Include the libraries=places
@@ -248,6 +479,7 @@ $(document).ready(function () {
   database.ref().on("child_added", function (childSnapshot) {
     // Assign variables to hold the value of the database key/value pairs for each parameter of an Interest
     var businessCity = childSnapshot.val();
+    console.log(childSnapshot);
     // var businessCity = childSnapshot.val().city;
     // Assign a variable to create BootStrap autolayout columns to hold HTML framework then append to page
     var newBSColDiv = $("<div class ='col-lg-2 col-md-3 col-sm-6 col-12'>");
@@ -263,6 +495,7 @@ $(document).ready(function () {
     newBSColDiv.append(newAnchor);
     // Append newDiv to class of buckets in container
     $(".buckets").append(newBSColDiv);
+
   });
 
   $("#yelp-submit").on("click", function () {

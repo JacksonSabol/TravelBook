@@ -37,6 +37,7 @@
         <a href="profile.html">My Profile</a>
       </nav>
     </div>
+    <div id="user-name"></div>
   </header>
   <!-- ===================== new ===================== -->
   <div class="modal fade" id="emptyField" role="dialog">
@@ -87,23 +88,17 @@
       <h3>Welcome to our site.</h3>
       <div class="container">
         <input id="txtEmail" type="email" placeholder="Email">
-
         <input id="txtPassword" type="password" placeholder="Password">
         <button id="btnSignUp" class="btn btn-secondary">
-
           <button id="btnSignUp" class="btn btn-secondary">
-
             Sign Up
           </button>
-
           <button id="btnLogin" class="btn btn-action">
             Log in
           </button>
-
           <button id="btnLogOut" class="btn btn-action hide">
             Log Out
           </button>
-
       </div> -->
 
 
@@ -112,6 +107,9 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 style="color:red;">Login</h4>
+          <p class="p-button">Not a member? <a href="#" id="toggleSignUpModal">Sign Up</a></p>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 style="color:red;">Login</h4>
             <p class="p-button">Not a member? <a href="#">Sign Up</a></p>
@@ -119,12 +117,13 @@
         <div class="modal-body">
           <form role="form">
             <div class="form-group">
-              <label for="usrname">Email</label>
-              <input type="text" class="form-control" id="input-email" placeholder="Enter email">
+              <label for="email">Email</label>
+              <input type="text" class="form-control" id="loginEmail" placeholder="Enter email">
             </div>
             <div class="form-group">
               <label for="psw">Password</label>
-              <input type="text" class="form-control" id="input-password" placeholder="Enter password">
+              <input type="text" class="form-control" id="loginPassword" placeholder="Enter password">
+
             </div>
             <button type="submit" class="login-button">
               Login</button>
@@ -133,6 +132,85 @@
       </div>
     </div>
   </div>
+
+  <!-- <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="Register" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="registerForm" method="POST">
+          <div class="modal-header">
+            <h4 class="modal-title" id="registerModalLabel">Register</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="recipient-name" class="form-control">First Name:</label>
+              <input type="text" class="form-control" id="registerFirstName">
+            </div>
+            <div class="form-group">
+              <label for="recipient-name" class="form-control">Last Name:</label>
+              <input type="text" class="form-control" id="registerLastName">
+            </div>
+            <div class="form-group">
+              <label for="recipient-name" class="form-control">Email:</label>
+              <input type="text" class="form-control" id="registerEmail">
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="form-control">Password:</label>
+              <input type="password" class="form-control" id="registerPassword">
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="form-control">Confirm Password:</label>
+              <input type="password" class="form-control" id="registerConfirmPassword">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="doRegister">Register</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Sign Up Modal -->
+  <div class="modal fade" id="signUpModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 style="color:red;">Sign Up</h4>
+          <p class="p-button">Already a member? <a href="#" id="toggleLogInModal">Log In</a></p>
+        </div>
+        <div class="modal-body">
+          <form role="form">
+            <div class="form-group">
+              <label for="recipient-name">First Name:</label>
+              <input type="text" class="form-control" id="registerFirstName">
+            </div>
+            <div class="form-group">
+              <label for="recipient-name">Last Name:</label>
+              <input type="text" class="form-control" id="registerLastName">
+            </div>
+            <div class="form-group">
+              <label for="recipient-name">Email:</label>
+              <input type="text" class="form-control" id="registerEmail">
+            </div>
+            <div class="form-group">
+              <label for="message-text">Password:</label>
+              <input type="password" class="form-control" id="registerPassword">
+            </div>
+            <div class="form-group">
+              <label for="message-text">Confirm Password:</label>
+              <input type="password" class="form-control" id="registerConfirmPassword">
+            </div>
+            <button type="submit" class="login-button" id="signup-button">Register</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
   <div id="main-container" class="container">
     <section class="main-section">
       <button type="button" class="button" id="loginSignUp">Login/Sign Up</button>
@@ -152,8 +230,6 @@
 
 
     </section>
-
-  </div>
 
   </div>
 
@@ -180,7 +256,6 @@
   <!-- Google API key. -->
   <!-- <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhJlQHvH5eKFMF847xmHIf3-cktkOPwJA&libraries=places&callback=initMap">
-
 </script> -->
 </body>
 
