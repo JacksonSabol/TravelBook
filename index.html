@@ -25,8 +25,8 @@
 
 </head>
 
-<body>
-
+<body class="auth-false">
+  <!-- Header -->
   <header id="masthead">
     <div class="container">
       <img src="assets/photos/logo.png" class="auth-image" alt="logo">
@@ -39,7 +39,7 @@
     </div>
     <div id="user-name"></div>
   </header>
-  <!-- ===================== new ===================== -->
+  <!-- Empty field alert modal -->
   <div class="modal fade" id="emptyField" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -56,51 +56,6 @@
       </div>
     </div>
   </div>
-  <!-- ===================== end new ===================== -->
-  <!------------------P&M----------------------------------------->
-  <!-- <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form>
-          <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="input-email" aria-describedby="emailHelp" placeholder="Enter email">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="input-password" placeholder="Password">
-          </div>
-          <div class="button-bar">
-            <button id="signup-button" class="btn btn-secondary">
-              Sign Up
-            </button>
-            <button id="login-button" class="btn btn-action">
-              Log in
-            </button>
-        </form>
-      </div>
-    </div>
-  </div> -->
-  <!-- <div id="main-container" class="container">
-    <section class="main-section">
-      <h3>Welcome to our site.</h3>
-      <div class="container">
-        <input id="txtEmail" type="email" placeholder="Email">
-        <input id="txtPassword" type="password" placeholder="Password">
-        <button id="btnSignUp" class="btn btn-secondary">
-          <button id="btnSignUp" class="btn btn-secondary">
-            Sign Up
-          </button>
-          <button id="btnLogin" class="btn btn-action">
-            Log in
-          </button>
-          <button id="btnLogOut" class="btn btn-action hide">
-            Log Out
-          </button>
-      </div> -->
-
 
   <!-- LogIn Modal -->
   <div class="modal fade" id="loginModal" role="dialog">
@@ -110,67 +65,24 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 style="color:red;">Login</h4>
           <p class="p-button">Not a member? <a href="#" id="toggleSignUpModal">Sign Up</a></p>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 style="color:red;">Login</h4>
-            <p class="p-button">Not a member? <a href="#">Sign Up</a></p>
         </div>
         <div class="modal-body">
-          <form role="form">
+          <form method="POST" role="form" id="loginForm">
             <div class="form-group">
               <label for="email">Email</label>
               <input type="text" class="form-control" id="loginEmail" placeholder="Enter email">
             </div>
             <div class="form-group">
               <label for="psw">Password</label>
-              <input type="text" class="form-control" id="loginPassword" placeholder="Enter password">
-
+              <input type="password" class="form-control" id="loginPassword" placeholder="Enter password">
             </div>
-            <button type="submit" class="login-button">
+            <button type="submit" class="login-button" id="doLogin">
               Login</button>
           </form>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="Register" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="registerForm" method="POST">
-          <div class="modal-header">
-            <h4 class="modal-title" id="registerModalLabel">Register</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="recipient-name" class="form-control">First Name:</label>
-              <input type="text" class="form-control" id="registerFirstName">
-            </div>
-            <div class="form-group">
-              <label for="recipient-name" class="form-control">Last Name:</label>
-              <input type="text" class="form-control" id="registerLastName">
-            </div>
-            <div class="form-group">
-              <label for="recipient-name" class="form-control">Email:</label>
-              <input type="text" class="form-control" id="registerEmail">
-            </div>
-            <div class="form-group">
-              <label for="message-text" class="form-control">Password:</label>
-              <input type="password" class="form-control" id="registerPassword">
-            </div>
-            <div class="form-group">
-              <label for="message-text" class="form-control">Confirm Password:</label>
-              <input type="password" class="form-control" id="registerConfirmPassword">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" id="doRegister">Register</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div> -->
 
   <!-- Sign Up Modal -->
   <div class="modal fade" id="signUpModal" role="dialog">
@@ -182,7 +94,7 @@
           <p class="p-button">Already a member? <a href="#" id="toggleLogInModal">Log In</a></p>
         </div>
         <div class="modal-body">
-          <form role="form">
+          <form method="POST" role="form" id="registerForm">
             <div class="form-group">
               <label for="recipient-name">First Name:</label>
               <input type="text" class="form-control" id="registerFirstName">
@@ -203,17 +115,22 @@
               <label for="message-text">Confirm Password:</label>
               <input type="password" class="form-control" id="registerConfirmPassword">
             </div>
-            <button type="submit" class="login-button" id="signup-button">Register</button>
+            <button type="submit" class="login-button" id="doRegister">Register</button>
           </form>
         </div>
       </div>
     </div>
   </div>
   </div>
-
+  <!-- Main Content -->
   <div id="main-container" class="container">
     <section class="main-section">
-      <button type="button" class="button" id="loginSignUp">Login/Sign Up</button>
+      <div class="userAuth unauthenticated pull-right">
+        <button type="submit" class="button" id="loginSignUp">Login/Sign Up</button>
+      </div>
+      <div class="userAuth authenticated">
+        <button type="submit" class="button" id="logout">Logout</button>
+      </div>
       <h3>Welcome to our site.</h3>
       <div class="form-contain">
         <h3>Search for restaurants you liked in any city!</h3>
@@ -226,13 +143,19 @@
       <div class="well"></div>
 
       <div id="map"></div>
-
-
-
     </section>
+    <!-- Added for testing logged-in user's information -->
+    <div class="travel-recc">
 
+      <h1>Travel Recommendations</h1>
+
+      <div class="row">
+        <div class="buckets"></div>
+      </div>
+    </div>
   </div>
 
+  <!-- Footer -->
   <footer>
     <div class="container">
       <!-- Add font awesome icons -->
@@ -244,11 +167,6 @@
       <a href="#" class="fa fa-pinterest"></a>
       Copyright &copy;
     </div>
-
-
-
-
-
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>

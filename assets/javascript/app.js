@@ -1,8 +1,9 @@
+// The * symbol precedes anything that needs fixing or needs something added to it
+// So you can ctrl or cmd f to find things that are lacking
+
 $(document).ready(function () {
 
-  var userFirebaseObject;
-
-  // // hide well when page loads
+  // // hide <div> with class of well on index.html when page loads
   $(".well").hide();
 
   // Initialize Firebase
@@ -16,239 +17,198 @@ $(document).ready(function () {
   };
   firebase.initializeApp(config);
 
-  var Auth = firebase.auth();
+  // ====================== login start ======================//
   var database = firebase.database();
+  // Assign a variable to equal the Firebase pathway to the Interests folder
   var interestRef = database.ref('Interests')
+  // Assign a variable to equal the Firebase pathway to the Users folder
   var usersRef = database.ref('Users')
+  // Assign a variable to hold the value of whether a user is logged in or not
   var auth = null;
+  // Assign a variable to a blank string 'globally' so it can be reassigned when a user is authenticated (logged in)
+  var userID = "";
 
-  // Login
-  $('.login-button').on('submit', function (e) {
+  // Register 
+  $('#registerForm').on('submit', function (e) {
+    // Prevent default action of submitting form then refreshing the page
     e.preventDefault();
-    $('#loginModal').modal('hide');
-    // $('#messageModalLabel').html(spanText('<i class="fa fa-cog fa-spin"></i>', ['center', 'info']));
-    // $('#messageModal').modal('show');
+    // Hide the signUpModal
+    $('#signUpModal').modal('hide');
+    // Assign a variable locally to hold the data entered into the sign up form
+    var data = {
+      email: $('#registerEmail').val(), // Get the email
+      firstName: $('#registerFirstName').val(), // Get firstName
+      lastName: $('#registerLastName').val(), // Get lastName
+    };
+    // Assign a variable locally to hold the password data for comparison
+    var passwords = {
+      password: $('#registerPassword').val(), // Get the password
+      cPassword: $('#registerConfirmPassword').val(), // Get the confirm password
+    }
+    // Make sure none of the fields important to logging in are empty
+    if (data.email != '' && passwords.password != '' && passwords.cPassword != '') {
+      // If they're filled, check if the passwords match
+      if (passwords.password == passwords.cPassword) {
+        // Create the user if the passwords match, sending the email and password to Google Firebase's build-in authentication system
+        firebase.auth()
+          .createUserWithEmailAndPassword(data.email, passwords.password)
+          .then(function (user) {
+            return user.updateProfile({ // * Change this what Maira slacked out
+              displayName: data.firstName + ' ' + data.lastName
+            })
+          })
+          .then(function (user) {
+            // Reassign variable auth to the user information so that user needs to be logged in to save data
+            auth = user;
+            // Save the profile data
+            usersRef.child(user.uid).set(data)
+              .then(function () {
+                // Log that the user has been added with the user's UID
+                console.log("User Information Saved:", user.uid);
+              })
+          })
+          .catch(function (error) { // Check for errors
+            console.log("Error creating user:", error);
+            console.log("Error creating user:", error.code);
+          });
+      } else {
+        // Log that the password and confirm password didn't match
+        console.log("ERROR: Passwords didn't match"); // * Maybe change this to edit a span in the signUpModal to let user know more conveniently
+      }
+    }
+  });
 
-    if (($('#loginEmail').val() != "") && ($('#loginPassword').val() != "")) {
-      //login the user
+  // Login when form with id of loginForm is submitted
+  $('#loginForm').on('submit', function (e) {
+    // Prevent default action of submitting then refreshing the page
+    e.preventDefault();
+    // Hide the loginModal
+    $('#loginModal').modal('hide');
+    // Make sure the login email and login password fields aren't empty
+    if ($('#loginEmail').val() != '' && $('#loginPassword').val() != '') {
+      // If they're not, assign a variable to hold the input field data
       var data = {
         email: $('#loginEmail').val(),
         password: $('#loginPassword').val()
       };
+      // Send authentication request to Firebase with the email and password provided by user
       firebase.auth().signInWithEmailAndPassword(data.email, data.password)
         .then(function (authData) {
+          // Reassign variable auth to the data returned by the Firebase authentication process (basically, so it's not null anymore)
           auth = authData;
-          // $('#messageModalLabel').html(spanText('Success!', ['center', 'success']))
-          // $('#messageModal').modal('hide');
+          // Log that user is logged in
+          console.log("Successfully logged in");
         })
-        .catch(function (error) {
+        .catch(function (error) { // Check for errors
           console.log("Login Failed!", error);
-          // $('#messageModalLabel').html(spanText('ERROR: ' + error.code, ['danger']))
+          console.log("Login Failed Code", error.code);
+          // Re-show loginModal if the login failed to authenticate
+          $('#loginModal').modal('show');
         });
     }
   });
 
+  // Sign out using built-in Firebase function on click of logout button
   $('#logout').on('click', function (e) {
+    // Prevent default action of submitting form and refreshing page
     e.preventDefault();
-    firebase.auth().signOut()
-    // $('#loginSignUp').removeClass("hide");
+    // Sign user out
+    firebase.auth().signOut();
+    // Log that user successfully signed out
+    console.log("Succesfully signed out");
+    // * Add a way to update the <div> well 
   });
 
-  $("body").on("click", "#loginSignUp", function () {
-    event.preventDefault();
+  // Open the loginSignUp modal when the button is clicked
+  $('#loginSignUp').on('click', function (e) {
+    e.preventDefault();
     // Show LogIn modal on click of login button
     $("#loginModal").modal('show');
 
   });
 
-  //Add signup Event
-  $("body").on("click", "#signup-button", function () {
-    event.preventDefault();
-    console.log("Hi. I hear you");
-    // Get e-mail and pass
-    var data = {
-      email: $("#registerEmail").val(),
-      password: $("#registerPassword").val(),
-      firstName: $('#registerFirstName').val(), // get firstName
-      lastName: $('#registerLastName').val(), // get lastName
-    };
-
-    var passwords = {
-      password: $("#registerPassword").val(),
-      cPassword: $('#registerConfirmPassword').val(), //get the confirmPass from Form
-
-    }
-    // if password 1 matches confirm password then create the user
-    if (data.email != '' && passwords.password != '' && passwords.cPassword != '') {
-      if (passwords.password == passwords.cPassword) {
-
-
-        //create the user
-
-        firebase.auth()
-          .createUserWithEmailAndPassword(data.email, passwords.password)
-          .then(function (user) {
-            return user.updateProfile({
-              displayName: data.firstName + ' ' + data.lastName
-            })
-          })
-          .then(function (user) {
-            //now user is needed to be logged in to save data
-            auth = user;
-            //now saving the profile data
-            usersRef.child(user.uid).set(data)
-              .then(function () {
-                console.log("User Information Saved:", user.uid);
-              })
-            // $('#messageModalLabel').html(spanText('Success!', ['center', 'success']))
-
-            // $('#messageModal').modal('hide');
-          })
-          .catch(function (error) {
-            console.log("Error creating user:", error);
-            // $('#messageModalLabel').html(spanText('ERROR: ' + error.code, ['danger']))
-          });
-      } else {
-        //password and confirm password didn't match
-        console.log("ERROR: Passwords didn't match");
-        // $('#messageModalLabel').html(spanText("ERROR: Passwords didn't match", ['danger']))
-      }
-    }
-  });
-
-
-    //Add login event
-    $("body").on("click", "#login-button", function () {
-      event.preventDefault();
-      console.log("Hi. I hear you");
-      // Get e-mail and pass
-      var email = $("#input-email").val();
-      var password = $("#input-password").val();
-      var auth = firebase.auth();
-      var promise = auth.signInWithEmailAndPassword(email, password);
-      promise.catch(e => alert(e.message));
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-    });
-    //Add signup Event
-    $("body").on("click", "#signup-button", function () {
-      event.preventDefault();
-      console.log("Hi. I hear you");
-      // Get e-mail and pass
-      var email = $("#input-email").val();
-      var password = $("#input-password").val();
-      var auth = firebase.auth();
-
-      var promise = auth.createUserWithEmailAndPassword(email, password);
-      promise
-        .catch(e => console.log(e.message));
-    });
-    // When authorization state changes, run function to get firebase user data back
-    // So whatever data is coming back from 
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-        console.log(firebaseUser);
-        console.log(firebaseUser.uid);
-        //$('#myModal').hide();
-      } else {
-        console.log('not logged in');
-      }
-    })
-  });
+  // ====================== login end ====================== //
+  // ====================== Add interest start ====================== //
 
   // Add "interest" on click of plus button
-  $("body").on("click", "add-button", function (event) {
+  $("body").on("click", ".add-button", function (event) {
     event.preventDefault();
+    // Check to make sure a user is signed in by comparing the value of the variable 'auth'
+    // We reassign it to the user's data when the user logs in, otherwise it stays as 'null'
     if (auth != null) {
+      // If the user is logged in, push/create a key (Firebase directory) with a value equal to an object of the information stored in the .add-button data attributes
       interestRef.child(auth.uid)
         .push({
           name: $(this).attr("data-biz-name"),
           phone: $(this).attr("data-biz-phone"),
           businessID: $(this).attr("data-id"),
-          businessCity: $(this).attr("data-city")
+          businessCity: $(this).attr("data-city"),
+          businessURL: $(this).attr("data-biz-url"),
+          bizImgURL: $(this).attr("data-img-url")
         });
     }
+    // If user is not logged in, auth=null, and show them the log in modal
     else {
       $("#loginModal").modal('show');
     }
-
-
-    // Modal prompting user to Log In
-    // $('#loginModal').modal('show');
-    // Assign variable to hold business ID to add to Firebase that's stored in this button's data-id
-    var idToAdd = $(this).attr("data-id");
-    // Assign variable to hold business city data value
-    var cityToAdd = $(this).attr("data-city");
-    // Assign variable to hold business city data value
-    var bizNameToAdd = $(this).attr("data-biz-name");
-    // Assign variable to hold business city data value
-    var bizAddressToAdd = $(this).attr("data-biz-address");
-    // Assign variable to hold business phone data value
-    var phoneToAdd = $(this).attr("data-biz-phone");
-    // Pull data down from Firebase to compare
-    // database.ref().on("" function (snapshot) {
-    //   userKey = snapshot.key;
-
-    // Set conditional to create new bucket if bucket does not exist - create new bucket with city name
-    // if (businessCity.exists()) {
-    //   database.ref("/" + firebase.uid).push({
-    //     businessID: idToAdd,
-    //     businessCity: cityToAdd,
-    //   });
-
-
-    // if (typeof maybeObject != "undefined") {
-    // alert("GOT THERE");
-    // }
-
-    // if bucket with businessCity name exists, add 
-    // } else {
-    //   database.ref("/" + firebase.uid)
-    // }
-
-    // });
-    // Push business ID and city to Firebase
-    // database.ref().child(user.uid).update({
-    //   businessCity: cityToAdd,
-    //   businessName: bizNameToAdd
-    // });
   });
+  // ====================== Add interest end ====================== //
 
+  // ====================== Append interest start ====================== //
+
+  // When the authentication state changes, run this function to append information - * currently none of this information exists in the Users object because something isn't working on line 56
   firebase.auth().onAuthStateChanged(function (user) {
+    // If user data exists - i.e. the user is logged in
     if (user) {
+      // Reassign placeholder variable auth to equal the authentication data returned
       auth = user;
-      // $('body').removeClass('auth-false').addClass('auth-true');
+      // Change the class of the body to auth-true for reference
+      $('body').removeClass('auth-false').addClass('auth-true');
+      // Pull the data of the authenticated user equal to the unique ID Google assigns when registering
       usersRef.child(user.uid).once('value').then(function (data) {
         var info = data.val();
+        // * Check if user has a photo and append it
         if (user.photoUrl) {
           $('.user-info img').show();
           $('.user-info img').attr('src', user.photoUrl);
           $('.user-info .user-name').hide();
         }
+        // * Otherwise, check if user has a display name and append it
         else if (user.displayName) {
-          // $('.user-info img').hide();
+          $('.user-info img').hide();
           $('#user-name').append('<span class="user-name">Welcome: ' + user.displayName + '</span>');
         }
+        // * Otherwise check if user has first name and append it
         else if (info.firstName) {
-          // $('.user-info img').hide();
-          $('#user-name').append('<span class="user-name">' + info.firstName + '</span>');
+          $('.user-info img').hide();
+          $('#user-name').html('<span class="user-name">' + info.firstName + '</span>');
+        }
+        // * Otherwise check if user has an email address and append it - user is required to have an email to authenticate so this is a 'worst case scenario'
+        else if (info.email) {
+          $('.user-info img').hide();
+          $('#user-name').html('<span class="user-name">' + info.email + '</span>');
         }
       });
+      // Reassign userID to the user's unique Google UID so it can be used later ('global' scope)
+      userID = user.uid;
+      // * Call a function onChildAdd that appends data to the DOM - bottom of the script but it currently isn't necessary; it will likely be useful in the future to change appended data on login/logout
       interestRef.child(user.uid).on('child_added', onChildAdd);
     }
     else {
-      // No user is signed in.
-      // $('body').removeClass('auth-true').addClass('auth-false');
-      auth && interestsRef.child(auth.uid).off('child_added', onChildAdd);
+      // No user is signed in so change body class to auth-false - not obviously useful at present, but it's a carry over from the script we based this on
+      $('body').removeClass('auth-true').addClass('auth-false');
+      // * Call off the auth and the function onChildAdd that doesn't do anything yet so in the future, nothing would be appended
+      auth && interestRef.child(auth.uid).off('child_added', onChildAdd);
+      // Clear the <div> with id of user-name - doesn't currently exist but we should add it
       $('#user-name').html('');
+      // Reassign variable auth to null so we can reference that no one is logged in
       auth = null;
     }
   });
-  function onChildAdd(snap) {
-    console.log(snap);
-    // $('#contacts').append(contactHtmlFromObject(snap.key, snap.val()));
-  }
+
+  // ====================== Append interest end ====================== //
+
+
   // Some APIs will give us a cross-origin (CORS) error. This small function is a fix for that error. You can also check out the chrome extenstion (https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en).
   jQuery.ajaxPrefilter(function (options) {
     if (options.crossDomain && jQuery.support.cors) {
@@ -258,7 +218,7 @@ $(document).ready(function () {
 
 
   // --------------------- index page --------------------------------------------------------------------------------
-  // Toggle Sign up Modal if not a member
+  // Toggle Sign up Modal from loginModal if not a member
   $("body").on("click", "#toggleSignUpModal", function () {
     event.preventDefault();
     // Hide loginModal
@@ -267,7 +227,7 @@ $(document).ready(function () {
     $("#signUpModal").modal('show');
   });
 
-  // Toggle Log in Modal if already a member
+  // Toggle Log in Modal from signUpModal if already a member
   $("body").on("click", "#toggleLogInModal", function () {
     event.preventDefault();
     // Hide loginModal
@@ -276,16 +236,16 @@ $(document).ready(function () {
     $("#loginModal").modal('show');
   });
 
+  // Call Yelp API and display results from query user inputted parameters
   $("#submit-search-form").on("click", function () {
 
-
-    // show well when submit button is clicked
+    // show <div> with class of well when submit button is clicked
     $(".well").show();
 
-    //Will stop the page from refreshing so we can grab the values input by the user
+    // Prevent the default action of submitting a form to stop page from refreshing
     event.preventDefault()
 
-    // grab a hold of the values the users input (the location and category)
+    // Assign local variables to the values the user's input (the location and category)
     var location = $("#location").val();
     var category = $("#category").val();
 
@@ -293,8 +253,9 @@ $(document).ready(function () {
     console.log(location);
     console.log(category);
 
-    // Add conditionals to make sure at least one field is filled 
+    // Add conditionals to make sure the most imporatant field (location) is filled 
     if (location === "") {
+      // Show emptyField modal
       $('#emptyField').modal('show');
     }
     else {
@@ -308,9 +269,11 @@ $(document).ready(function () {
           authorization: "Bearer zTc8hKel4T1UcSNchYEMflSNuuZ4B6NErA4ebwBx5NE2WCMlTAC8YOpimFb5osb45soTdnkhO0bi1841cHisFdjLD0ihQhs47ZQH6q4CfBj-wJJAZlzIa5btBYv4W3Yx",
         }
       }).then(function (response) {
+        // Log response for reference - Yelp API returns lots of good information
         console.log(response)
+        // Empty the <div> with class of well to make room for new results - better than prepending at the end because prepending puts them in opposite order of relevance
         $(".well").empty();
-
+        // Loop through the results
         for (var i = 0; i < response.businesses.length; i++) {
           // Assign variables to hold API information
           var imgURL = response.businesses[i].image_url;
@@ -355,9 +318,13 @@ $(document).ready(function () {
           addBtn.attr("data-biz-address", businessAddress);
           // Add business phone to button to add to Firebase on click of plus sign
           addBtn.attr("data-biz-phone", businessPhone);
+          // Add business URL to button to add to Firebase on click of plus sign
+          addBtn.attr("data-biz-url", businessURL);
+          // Add imgURL to button to add to firebase on click of plus sign
+          addBtn.attr("data-img-url", imgURL);
           // Add Bootstrap plus sign class to span
           addSpan.addClass("glyphicon glyphicon-plus-sign");
-          // Add hide function to span
+          // * Maybe ** Add hide function to span - can hide the entry after clicking so user doesn't see it anymore - not a priority
           addSpan.attr("aria-hidden", "true");
           // Append span to rightCell
           addBtn.append(addSpan);
@@ -376,63 +343,7 @@ $(document).ready(function () {
     }
   });
 
-  // Add "interest" on click of plus button
-  // $("body").on("click", ".add-button", function () {
-  // // if (auth != null) {
-  // interestRef.child(auth.uid)
-  //   .push({
-  //     name: $(this).attr("data-biz-name"),
-  //     phone: $(this).attr("data-biz-phone"),
-  //     businessID: $(this).attr("data-id"),
-  //     businessCity: $(this).attr("data-city")
-  //   });
-  // }
-  // else {
-  //   $("#loginModal").modal('show');
-  // }
-
-
-  // Modal prompting user to Log In
-  // $('#loginModal').modal('show');
-  // Assign variable to hold business ID to add to Firebase that's stored in this button's data-id
-  // var idToAdd = $(this).attr("data-id");
-  // // Assign variable to hold business city data value
-  // var cityToAdd = $(this).attr("data-city");
-  // // Assign variable to hold business city data value
-  // var bizNameToAdd = $(this).attr("data-biz-name");
-  // // Assign variable to hold business city data value
-  // var bizAddressToAdd = $(this).attr("data-biz-address");
-  // // Assign variable to hold business phone data value
-  // var phoneToAdd = $(this).attr("data-biz-phone");
-  // Pull data down from Firebase to compare
-  // database.ref().on("" function (snapshot) {
-  //   userKey = snapshot.key;
-
-  // Set conditional to create new bucket if bucket does not exist - create new bucket with city name
-  // if (businessCity.exists()) {
-  //   database.ref("/" + firebase.uid).push({
-  //     businessID: idToAdd,
-  //     businessCity: cityToAdd,
-  //   });
-
-  // if (typeof maybeObject != "undefined") {
-  // alert("GOT THERE");
-  // }
-
-  // if bucket with businessCity name exists, add 
-  // } else {
-  //   database.ref("/" + firebase.uid)
-  // }
-
-  // });
-  // Push business ID and city to Firebase
-  // database.ref().child(user.uid).update({
-  //   businessCity: cityToAdd,
-  //   businessName: bizNameToAdd
-  // });
-  // });
-
-
+  // Google Places API Information
   // This example requires the Places library. Include the libraries=places
   // // parameter when you first load the API. For example:
   // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8&libraries=places"></script>
@@ -474,57 +385,62 @@ $(document).ready(function () {
 
   // ------------------------------------ profile page ------------------------------------
 
-  // Append firebase data to profile page - format above (maybe) buckin fuckets
-  // Create Firebase event for adding new restaurant to the database and a row in the html when a user adds an entry
-  database.ref().on("child_added", function (childSnapshot) {
-    // Assign variables to hold the value of the database key/value pairs for each parameter of an Interest
-    var businessCity = childSnapshot.val();
-    console.log(childSnapshot);
-    // var businessCity = childSnapshot.val().city;
-    // Assign a variable to create BootStrap autolayout columns to hold HTML framework then append to page
-    var newBSColDiv = $("<div class ='col-lg-2 col-md-3 col-sm-6 col-12'>");
-    // Assign a variable to create an anchor tag to wrap around bucket photo and title
-    var newAnchor = $("<a>").attr("href", "#").html("<h3 id='city-name'>" + businessCity + "</h3>"); // Change href to target CSS in the future, creating an expandable and collapsible listicle
-    // Assign a variable to create an img tag for bucket city
-    var newImg = $("<img>").attr({ "src": "assets/photos/sf-icon.jpg", "alt": "City Name", "class": "city-thumbnail" }); // Pull image of the city from Google Places API in the future
-    // Assign a variable to crean an h3 tag for the city name
-    // var newHtag = $("<h3>").text(businessCity); // Change text to a variable that holds the city name in the future
-    // Append newHtag and newImg to newAnchor
-    newAnchor.append(newImg);
-    // Append newAnchor to BootStrap Div
-    newBSColDiv.append(newAnchor);
-    // Append newDiv to class of buckets in container
-    $(".buckets").append(newBSColDiv);
+  // Append firebase data to profile page
+  // Create Firebase event to listen for the addition of a new 'Interest' to the database
+  interestRef.on('child_added', function (firstChildSnapshot) {
+    // For testing purposes: log the key of the first child in the 'Interests' directory
+    console.log("First: " + firstChildSnapshot.key); // It logs the user UID, which is the first thing we push to on line 140
+    // Add conditional to only loop through the second children if the tree name matches the user's UID
+    // userID defined as empty string inside document.ready function (line 29), then reassigned on line 192 when the auth state changes (user logs in)
+    console.log("User ID: " + userID);
+    // Limit what gets appended to only things associated with the logged in user
+    if (firstChildSnapshot.key === userID) {
+      firstChildSnapshot.forEach(function (secondChildSnapshot) {
+        // Loop through the child folders whose names (keys) are assigned by Google Firebase upon creation
+        // Fun fact: their key name includes a time stamp so Google can order them
+        // Other fun fact: they contain 72 random bits of entropy, which is a lot considering I have less than that as a Boltzmann brain
+        console.log("Second: " + secondChildSnapshot.key); // logs the DataSnapshot key created by Firebase
+        console.log("Second Child Biz Name: " + secondChildSnapshot.val().name); // outputs the business name!
 
-  });
-
-  $("#yelp-submit").on("click", function () {
-    event.preventDefault();
-
-
-    // grab a hold of the values the users input (the location and category)
-    var location = $("#location").val();
-    // Start with category of restaurants for testing
-    var category = $("#category").val();
-    //   // Make an AJAX call to the Yelp API based on your research. 
-    //   // Try and get a response back that returns a series of business fitting 
-    //   // within a specified location and category.
-
-    $.ajax({
-      url: 'https://api.yelp.com/v3/businesses/search?location=' + location + '&term=' + category + '',
-      method: "GET",
-      headers: {
-        authorization: "Bearer zTc8hKel4T1UcSNchYEMflSNuuZ4B6NErA4ebwBx5NE2WCMlTAC8YOpimFb5osb45soTdnkhO0bi1841cHisFdjLD0ihQhs47ZQH6q4CfBj-wJJAZlzIa5btBYv4W3Yx",
-      }
-    }).then(function (response) {
-      console.log(response);
-
-
-      for (var i = 0; i < response.businesses.length; i++) {
-
-        // Now that we're able to get the information we want, it's time to render it to the page.
-        $("#well").append('<img class="thumbnail" src="' + response.businesses[i].image_url + '"/><h2 class="name">' + response.businesses[i].name + '</h2><p class="phone">' + response.businesses[i].display_phone + '</p><p class="address">' + response.businesses[i].location.address1 + ', ' + response.businesses[i].location.city + ' ' + response.businesses[i].location.zip_code + '</p><p class="url">' + response.businesses[i].url + '</p><hr>')
-      }
-    });
+        // Assign variable to hold the value of the database key/value pairs for each parameter of an Interest
+        var interestReturned = secondChildSnapshot.val();
+        // Assign a variable to create BootStrap autolayout columns to hold HTML framework then append to page
+        var newBSColDiv = $("<div class ='col-lg-2 col-md-3 col-sm-6 col-12'>");
+        // Assign a variable to create an anchor tag to wrap around bucket photo and title
+        var newAnchor = $("<a>").attr({"href": interestReturned.businessURL, "target": "_blank"}).html("<h3 id='" + interestReturned.businessCity + "'>" + interestReturned.name + "</h3>"); // href currently sends user to business's Yelp page
+        // Assign a variable to create an img tag
+        var newImg = $("<img>").attr({ "src": interestReturned.bizImgURL, "alt": interestReturned.businessCity, "class": "city-thumbnail" }); // src is currently the Yelp business page's default photo
+        // Append newHtag and newImg to newAnchor
+        newAnchor.append(newImg);
+        // Append newAnchor to BootStrap Div
+        newBSColDiv.append(newAnchor);
+        // Append newDiv to class of buckets in container
+        $(".buckets").append(newBSColDiv);
+      });
+    }
+    else {
+      // do nothing, because we don't want data that's not associated with the logged-in user's UID
+    }
   });
 });
+
+// * Future function to call to append data to profile page
+function onChildAdd(snap) {
+  // Calls function below which also doesn't do anything yet - notice it's appending to an id of buckets, not a class of buckets
+  $('#buckets').append(interestHTMLFromObject(snap.key, snap.val()));
+}
+
+// * Future function to call to append data to the profile page
+function interestHTMLFromObject(key, interest) {
+  return '<div class ="col-lg-2 col-md-3 col-sm-6 col-12" id="' + key + '">'
+    + '<h3>' + interest.businessCity + '</h3>'
+    + '<a href="' + interest.businessURL + '">' + interest.name + '</a>'
+    + '<img src="assets/photos/sf-icon.jpg" class="city-thumbnail" alt="' + interest.businessCity + '">'
+    + '</div>';
+}
+
+// Data format
+//     name: $(this).attr("data-biz-name"),
+//     phone: $(this).attr("data-biz-phone"),
+//     businessID: $(this).attr("data-id"),
+//     businessCity: $(this).attr("data-city")
