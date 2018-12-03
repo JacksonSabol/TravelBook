@@ -78,6 +78,14 @@ $(document).ready(function () {
     }
   });
 
+  //  // Modal for when something is added to profile 
+  $("body").on("click", ".add-button", function (e) {
+  // Prevent default action of submitting then refreshing the page
+  e.preventDefault();
+  // Hide the loginModal
+  $('#addToProfModal').modal('show');
+  });
+
   // Login when form with id of loginForm is submitted
   $('#loginForm').on('submit', function (e) {
     // Prevent default action of submitting then refreshing the page
@@ -141,10 +149,13 @@ $(document).ready(function () {
         .push({
           name: $(this).attr("data-biz-name"),
           phone: $(this).attr("data-biz-phone"),
+          address: $(this).attr("data-biz-address"),
           businessID: $(this).attr("data-id"),
           businessCity: $(this).attr("data-city"),
           businessURL: $(this).attr("data-biz-url"),
-          bizImgURL: $(this).attr("data-img-url")
+          bizImgURL: $(this).attr("data-img-url"),
+          bizPrice: $(this).attr("data-price"),
+          bizCategory: $(this).attr("data-category")
         });
     }
     // If user is not logged in, auth=null, and show them the log in modal
@@ -282,7 +293,11 @@ $(document).ready(function () {
           var businessCity = response.businesses[i].location.city;
           var businessAddress = response.businesses[i].location.address1 + ', ' + response.businesses[i].location.city + ' ' + response.businesses[i].location.zip_code;
           var businessURL = response.businesses[i].url;
+          var businessCategory = response.businesses[i].categories[0].title;
           var businessID = response.businesses[i].id;
+          var businessLatitude = response.businesses[i].coordinates.latitude;
+          var businessLongitude = response.businesses[i].coordinates.longitude;
+          var businessPrice = response.businesses[i].price;
 
           // Dynamically generate a new table
           var newTable = $("<table width='100%'>");
@@ -297,9 +312,9 @@ $(document).ready(function () {
           // Append business name to leftCell
           leftCell.append($("<a>").attr({ "href": businessURL, "class": "business-name", "target": "_blank" }).html("<h3 class=''>" + businessName + "</h3>"));
           // Append business phone number to leftCell
-          leftCell.append($("<p>").attr("class", "phone").text(businessPhone));
+          leftCell.append($("<p>").attr("class", "data-biz-phone").text(businessPhone)); // cb changed this to data-biz-phone not data-phone
           // Append business address to leftCell
-          leftCell.append($("<p>").attr("class", "address").text(businessAddress));
+          leftCell.append($("<p>").attr("class", "data-biz-address").text(businessAddress));
           // Dynamically generate a table cell to append an add button to
           var rightCell = $("<td>").attr({ "width": "10%", "align": "center" });
           // Dynamically generate a button tag
@@ -308,6 +323,14 @@ $(document).ready(function () {
           var addSpan = $("<span>");
           // Add class to button
           addBtn.addClass("add-button");
+          // Add business ID to button to add to Firebase on click of plus sign
+          addBtn.attr("data-category", businessCategory);
+          // Add business ID to button to add to Firebase on click of plus sign
+          addBtn.attr("data-latitude", businessLatitude);
+          // Add business ID to button to add to Firebase on click of plus sign
+          addBtn.attr("data-longitude", businessLongitude);
+          // Add business ID to button to add to Firebase on click of plus sign
+          addBtn.attr("data-price", businessPrice);
           // Add business ID to button to add to Firebase on click of plus sign
           addBtn.attr("data-id", businessID);
           // Add business city to button to add to Firebase on click of plus sign
@@ -405,17 +428,24 @@ $(document).ready(function () {
         // Assign variable to hold the value of the database key/value pairs for each parameter of an Interest
         var interestReturned = secondChildSnapshot.val();
         // Assign a variable to create BootStrap autolayout columns to hold HTML framework then append to page
-        var newBSColDiv = $("<div class ='col-lg-2 col-md-3 col-sm-6 col-12'>");
+        var newBSColDiv = $("<div class ='col-lg-6'>"); //class ='col-lg-2 col-md-3 col-sm-6 col-12'> or "col-6 col-sm-3"
         // Assign a variable to create an anchor tag to wrap around bucket photo and title
-        var newAnchor = $("<a>").attr({"href": interestReturned.businessURL, "target": "_blank"}).html("<h3 id='" + interestReturned.businessCity + "'>" + interestReturned.name + "</h3>"); // href currently sends user to business's Yelp page
+        var newAnchor = $("<a>").attr({"href": interestReturned.businessURL, "target": "_blank"}).html("<h3 id= 'smallerh3 " + interestReturned.businessCity + "'>" + interestReturned.name + '</h3> <p> phone: ' + interestReturned.phone + ' <br> address: ' + interestReturned.address + '<br> price: ' + interestReturned.bizPrice + ' <br> type of food:  ' + interestReturned.bizCategory + '</p><br>'); // href currently sends user to business's Yelp page
         // Assign a variable to create an img tag
-        var newImg = $("<img>").attr({ "src": interestReturned.bizImgURL, "alt": interestReturned.businessCity, "class": "city-thumbnail" }); // src is currently the Yelp business page's default photo
+        var newImg = $("<img>").attr({ "src": interestReturned.bizImgURL, "alt": interestReturned.businessCity, "class": "business-thumbnail" }); // src is currently the Yelp business page's default photo
         // Append newHtag and newImg to newAnchor
-        newAnchor.append(newImg);
+        newAnchor.prepend(newImg);
         // Append newAnchor to BootStrap Div
         newBSColDiv.append(newAnchor);
+        // Append business address to new Anchor
+        // newBSColDiv.append($("<p>").text(interestReturned.phone));
+        // Append business address to new Anchor
+        // newBSColDiv.append($("<p>").text(interestReturned.address));
         // Append newDiv to class of buckets in container
         $(".buckets").append(newBSColDiv);
+      //   //show only restaurants in SF--testing
+      // $('#Denver').show();
+      // $('#San Francisco').hide();
       });
     }
     else {
@@ -432,13 +462,13 @@ function onChildAdd(snap) {
 
 // * Future function to call to append data to the profile page
 function interestHTMLFromObject(key, interest) {
-  return '<div class ="col-lg-2 col-md-3 col-sm-6 col-12" id="' + key + '">'
+  return '<div class ="col-lg-2 col-md-3 col-sm-6 col-12" id="' + key + '">' 
     + '<h3>' + interest.businessCity + '</h3>'
     + '<a href="' + interest.businessURL + '">' + interest.name + '</a>'
     + '<img src="assets/photos/sf-icon.jpg" class="city-thumbnail" alt="' + interest.businessCity + '">'
     + '</div>';
 }
-
+// interestHTMLFromObject(key, interest);
 // Data format
 //     name: $(this).attr("data-biz-name"),
 //     phone: $(this).attr("data-biz-phone"),

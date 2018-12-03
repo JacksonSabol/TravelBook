@@ -97,7 +97,6 @@ p, p.phone, p.address{
   font-family: 'Raleway', sans-serif;
   font-size: 19px;
   line-height: 20px;
-  font-size: 14px;
   color: black;
   margin-bottom: 0px; 
 }
@@ -161,7 +160,7 @@ font-size: 18px;
 margin-top: 2px;
 margin-bottom: 2px;
 text-align: left;
-padding-left: 10px;
+padding-left: 0px;
 }
 
 #main-container-profile > h2 {
@@ -177,12 +176,47 @@ h1 {
 }
 
 .city-thumbnail{
-  height: 100px;
-  width: 100px;
+  height: 80px;
+  width: 80px;
   border-radius: 100%;
   float: left; 
   margin: 17px;
  
+}
+.business-thumbnail{
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    float: left; 
+    margin: 10px;
+   
+  }
+#smallerh3{
+      font-size: 20px;
+      padding: 0px;
+      margin-bottom: 3px;
+  }
+
+.col-lg-6 > a{
+    font-size: 17px;
+    color: black;
+    padding-top: 2px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.col-lg-6 > h3{
+    font-size: 25px;
+    color: black;
+    padding-top: 2px;
+    margin-top: 10px;
+}
+
+.col-lg-6 > p{
+    font-size: 35px;
+    color: black;
+    padding-top: 2px;
+    margin-top: 10px;
 }
 
 #city-name{
@@ -253,7 +287,11 @@ footer {
   text-align: center;
   background: lightgray;
   border-top: 1px solid rgb(228, 43, 71);
-
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
 }
 
 
@@ -934,6 +972,7 @@ border-radius: 12px;
 
 footer{
   width: 100%;
+    flex-shrink: 0;
 }
 }
 
