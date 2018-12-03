@@ -8,12 +8,12 @@ $(document).ready(function () {
 
   // Initialize Firebase
   var config = {
-    apiKey: "AIzaSyDUdVWlEz1qc5yRMx1xOqMzmaSjukaW3DA",
-    authDomain: "test-project-54b23.firebaseapp.com",
-    databaseURL: "https://test-project-54b23.firebaseio.com",
-    projectId: "test-project-54b23",
-    storageBucket: "test-project-54b23.appspot.com",
-    messagingSenderId: "489318913326"
+    apiKey: "AIzaSyDLk-BHKWaXv4zCAWa9Ekc51UalnuS5yjo",
+    authDomain: "travelbook-1543375707755.firebaseapp.com",
+    databaseURL: "https://travelbook-1543375707755.firebaseio.com",
+    projectId: "travelbook-1543375707755",
+    storageBucket: "travelbook-1543375707755.appspot.com",
+    messagingSenderId: "329432180812"
   };
   firebase.initializeApp(config);
 
