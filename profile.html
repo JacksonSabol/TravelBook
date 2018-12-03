@@ -47,6 +47,13 @@
     <div id="main-container-profile">
       <h2>User Name</h2><br>
       <img src="https://via.placeholder.com/175" class="profile-pic" alt="User Name"><br>
+      <div id="filesubmit">
+        <input type="file" class="file-select" id="file-select" accept="image/*" />
+        <button class="file-submit" id="file-submit">SUBMIT</button>
+        <progress value="0" max="100" id="uploader-bar">0%</progress>
+      </div>
+      <h2>Welcome: </h2>
+      <span class="user-info"></span>
       <h2>About Me</h2>
       <span contenteditable="true">
         What are your all-time favorite cities you've visited?
@@ -54,39 +61,11 @@
         This text can be edited by the user.
       </span>
     </div>
-
-
-    <!-- <div>
-      <h4><strong>Currently live in:</strong></h4>
-      <ul>
-        <li>Copenhagen, Denmark</li>
-      </ul>
-      <h4><strong>Favorite Cities To Visit</strong></h4>
-      <ul>
-        <li>Nashville, Tennessee <button type="submit" class="btn btn-default" id="yelp-submit" data-name="nashville">Yelp</button><button
-            type="submit" class="btn btn-default" id="google-submit" data-name="nashville">Google</button></li>
-        <li>Amsterdam, Netherlands</li>
-        <li>Moterosso, Italy </li>
-      </ul> -->
-
-
-
     <div class="travel-recc">
 
-      <h1 >Travel Recommendations</h1>
-<br>
-      <div class = "row">
-        <div class="buckets h3small"></div>
-      </div>
-      <!-- <div class="col-lg-4 col-md-6 col-sm-12">
-        <div class="work">
-          <a href="link" target="_blank">
-            <img src="assets/photos/logo.png" alt="Crystals Game" class="responsive">
-          </a>
-          <h3>San Francisco</h3>
-        </div>
-      </div>
-    </div> -->
+      <h1>Travel Recommendations</h1>
+      <br>
+      <div class="buckets h3small"></div>
     </div>
   </div>
 
