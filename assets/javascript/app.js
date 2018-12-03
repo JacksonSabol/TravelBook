@@ -8,12 +8,12 @@ $(document).ready(function () {
 
   // Initialize Firebase
   var config = {
-    apiKey: "AIzaSyDLk-BHKWaXv4zCAWa9Ekc51UalnuS5yjo",
-    authDomain: "travelbook-1543375707755.firebaseapp.com",
-    databaseURL: "https://travelbook-1543375707755.firebaseio.com",
-    projectId: "travelbook-1543375707755",
-    storageBucket: "travelbook-1543375707755.appspot.com",
-    messagingSenderId: "329432180812"
+    apiKey: "AIzaSyDUdVWlEz1qc5yRMx1xOqMzmaSjukaW3DA",
+    authDomain: "test-project-54b23.firebaseapp.com",
+    databaseURL: "https://test-project-54b23.firebaseio.com",
+    projectId: "test-project-54b23",
+    storageBucket: "test-project-54b23.appspot.com",
+    messagingSenderId: "489318913326"
   };
   firebase.initializeApp(config);
 
@@ -64,12 +64,12 @@ $(document).ready(function () {
             usersRef.child(user.uid).set(data)
               .then(function () {
                 // Log that the user has been added with the user's UID
-                console.log("User Information Saved:", user.uid);
+                console.log("User Information Saved:", user.uid); // * change to modal with appendable span
               })
           })
           .catch(function (error) { // Check for errors
-            console.log("Error creating user:", error);
-            console.log("Error creating user:", error.code);
+            console.log("Error creating user:", error); // * change to modal with appendable span
+            console.log("Error creating user:", error.code); // * change to modal with appendable span
           });
       } else {
         // Log that the password and confirm password didn't match
@@ -80,11 +80,18 @@ $(document).ready(function () {
 
   //  // Modal for when something is added to profile 
   $("body").on("click", ".add-button", function (e) {
-  // Prevent default action of submitting then refreshing the page
-  e.preventDefault();
-  // Hide the loginModal
-  $('#addToProfModal').modal('show');
+    // Prevent default action of submitting then refreshing the page
+    e.preventDefault();
+    // Show the addToProfile modal
+    $('#addToProfModal').modal('show');
+    // Set timeout on modal hiding function
+    setTimeout(addToProfileDone, 1000 * 1.5);
   });
+
+  // Function to hide addToProfModal
+  function addToProfileDone() {
+    $('#addToProfModal').modal('hide');
+  }
 
   // Login when form with id of loginForm is submitted
   $('#loginForm').on('submit', function (e) {
@@ -119,12 +126,12 @@ $(document).ready(function () {
   // Sign out using built-in Firebase function on click of logout button
   $('#logout').on('click', function (e) {
     // Prevent default action of submitting form and refreshing page
-    e.preventDefault();
+    // e.preventDefault();
     // Sign user out
     firebase.auth().signOut();
     // Log that user successfully signed out
     console.log("Succesfully signed out");
-    // * Add a way to update the <div> well 
+    // * Add a way to update the <div> well √ removed <div> well from index
   });
 
   // Open the loginSignUp modal when the button is clicked
@@ -175,29 +182,34 @@ $(document).ready(function () {
       auth = user;
       // Change the class of the body to auth-true for reference
       $('body').removeClass('auth-false').addClass('auth-true');
+      // Hide the Login/Sign Up button when user logs in
+      $("#loginSignUp").hide();
+      // Show the Logout button when user logs in
+      $("#logout").show();
       // Pull the data of the authenticated user equal to the unique ID Google assigns when registering
       usersRef.child(user.uid).once('value').then(function (data) {
         var info = data.val();
         // * Check if user has a photo and append it
         if (user.photoUrl) {
-          $('.user-info img').show();
-          $('.user-info img').attr('src', user.photoUrl);
-          $('.user-info .user-name').hide();
+          $('#user-info img').show();
+          $('#user-info img').attr('src', user.photoUrl);
+          $('#user-info').html('<span id="user-name">' + user.displayName + '</span>');
+          $('#user-info #user-name').show();
         }
         // * Otherwise, check if user has a display name and append it
         else if (user.displayName) {
-          $('.user-info img').hide();
-          $('#user-name').append('<span class="user-name">Welcome: ' + user.displayName + '</span>');
+          $('#user-info img').hide();
+          $('#user-info').html('<span id="user-name">' + user.displayName + '</span>');
         }
         // * Otherwise check if user has first name and append it
         else if (info.firstName) {
-          $('.user-info img').hide();
-          $('#user-name').html('<span class="user-name">' + info.firstName + '</span>');
+          $('#user-info img').hide();
+          $('#user-info').html('<span id="user-name">' + info.firstName + '</span>');
         }
         // * Otherwise check if user has an email address and append it - user is required to have an email to authenticate so this is a 'worst case scenario'
         else if (info.email) {
-          $('.user-info img').hide();
-          $('#user-name').html('<span class="user-name">' + info.email + '</span>');
+          $('#user-info img').hide();
+          $('#user-info').html('<span id="user-name">' + info.email + '</span>');
         }
       });
       // Reassign userID to the user's unique Google UID so it can be used later ('global' scope)
@@ -208,9 +220,13 @@ $(document).ready(function () {
     else {
       // No user is signed in so change body class to auth-false - not obviously useful at present, but it's a carry over from the script we based this on
       $('body').removeClass('auth-true').addClass('auth-false');
+      // Hide the Logout button when user authentication fails
+      $("#logout").hide();
+      // Show the Login/Sign Up button when user authentication fails
+      $("#loginSignUp").show();
       // * Call off the auth and the function onChildAdd that doesn't do anything yet so in the future, nothing would be appended
       auth && interestRef.child(auth.uid).off('child_added', onChildAdd);
-      // Clear the <div> with id of user-name - doesn't currently exist but we should add it
+      // Clear the <div> with id of user-name - * doesn't currently exist but we should add it
       $('#user-name').html('');
       // Reassign variable auth to null so we can reference that no one is logged in
       auth = null;
@@ -427,10 +443,31 @@ $(document).ready(function () {
 
         // Assign variable to hold the value of the database key/value pairs for each parameter of an Interest
         var interestReturned = secondChildSnapshot.val();
+        // Assign a variable to create a BootStrap autolayout row to append Interests to
+        // var newRowInterestCity = $("<div class ='row'>");
+        // Assign a variable to hold an anchor tag with an h2 tag with City Name - direct href of anchor tag to open collapsible list
+        // var newAnchor = $("<a>").attr("href", "#").html("<h2 id= " + interestReturned.businessCity + "'>" + interestReturned.businessCity + "</h2>");
+        
+        // Loop through every business City 
+        // for (var i=0; i < interestReturned.businessCity.length) {
+          
+        // }
+        // Are duplicates code drill
+        // If the business city is the same for multiple interests, add all of those interests to the same businessCity list
+        // If there are duplicates, meaning there are multiple interests with the same businessCity, assign the values at those indices to an array?
+        // var duplicateCity = [];
+        // if (interestReturned.businessCity)
+        
+        // call on function that holds all city name
+
+        // for loop to loop through all city names and append them to the page
+        // for (var i=0; i < duplicateCity.length) {
+          // row.append($("<p>").attr("class", "data-city").text(duplicateCity);
+
         // Assign a variable to create BootStrap autolayout columns to hold HTML framework then append to page
-        var newBSColDiv = $("<div class ='col-lg-6'>"); //class ='col-lg-2 col-md-3 col-sm-6 col-12'> or "col-6 col-sm-3"
+        var newBSColDiv = $("<div class ='col-lg-12 col-md-12 col-sm-12 col-12'>"); //class ='col-lg-2 col-md-3 col-sm-6 col-12'> or "col-6 col-sm-3"
         // Assign a variable to create an anchor tag to wrap around bucket photo and title
-        var newAnchor = $("<a>").attr({"href": interestReturned.businessURL, "target": "_blank"}).html("<h3 id= 'smallerh3 " + interestReturned.businessCity + "'>" + interestReturned.name + '</h3> <p> phone: ' + interestReturned.phone + ' <br> address: ' + interestReturned.address + '<br> price: ' + interestReturned.bizPrice + ' <br> type of food:  ' + interestReturned.bizCategory + '</p><br>'); // href currently sends user to business's Yelp page
+        var newAnchor = $("<a>").attr({ "href": interestReturned.businessURL, "target": "_blank" }).html("<h3 id= 'smallerh3 " + interestReturned.businessCity + "'>" + interestReturned.name + '</h3> <p> phone: ' + interestReturned.phone + ' <br> address: ' + interestReturned.address + '<br> price: ' + interestReturned.bizPrice + ' <br> type of food:  ' + interestReturned.bizCategory + '</p><br>'); // href currently sends user to business's Yelp page
         // Assign a variable to create an img tag
         var newImg = $("<img>").attr({ "src": interestReturned.bizImgURL, "alt": interestReturned.businessCity, "class": "business-thumbnail" }); // src is currently the Yelp business page's default photo
         // Append newHtag and newImg to newAnchor
@@ -443,15 +480,40 @@ $(document).ready(function () {
         // newBSColDiv.append($("<p>").text(interestReturned.address));
         // Append newDiv to class of buckets in container
         $(".buckets").append(newBSColDiv);
-      //   //show only restaurants in SF--testing
-      // $('#Denver').show();
-      // $('#San Francisco').hide();
+        //   //show only restaurants in SF--testing
+        // $('#Denver').show();
+        // $('#San Francisco').hide();
       });
     }
     else {
       // do nothing, because we don't want data that's not associated with the logged-in user's UID
     }
   });
+
+  // PETE: Allow user to upload a photo to page
+//   var uploader = document.getElementById('#file-select');
+//   var uploadButton = document.getElementById('#file-submit');
+
+//   uploadButton.addEventListener('change', function (e) {
+//     // Get file
+//     var profilePhoto = e.target.files[0];
+//     // Create storage ref
+//     var storageRef = firebase.storage().ref('profile_photos/' + file.name);
+//     // Upload file
+//     storageRef.put(file);
+//     // Update progress bar
+//     task.on('state_changed',
+//       function progress(snapshot) {
+//         var percentage = (snapshot.bytesTransferred /
+//           snapshot.totalbytes) * 100;
+//         uploader.value = percentage;
+//       },
+//       function error(err) {
+//       },
+//       function complete() {
+
+//       })
+//   })
 });
 
 // * Future function to call to append data to profile page
@@ -462,7 +524,7 @@ function onChildAdd(snap) {
 
 // * Future function to call to append data to the profile page
 function interestHTMLFromObject(key, interest) {
-  return '<div class ="col-lg-2 col-md-3 col-sm-6 col-12" id="' + key + '">' 
+  return '<div class ="col-lg-2 col-md-3 col-sm-6 col-12" id="' + key + '">'
     + '<h3>' + interest.businessCity + '</h3>'
     + '<a href="' + interest.businessURL + '">' + interest.name + '</a>'
     + '<img src="assets/photos/sf-icon.jpg" class="city-thumbnail" alt="' + interest.businessCity + '">'
