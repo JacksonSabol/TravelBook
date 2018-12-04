@@ -42,14 +42,14 @@ Thank you for reading!
 [https://jacksonsabol.github.io/Project_One/]
 
 ### Built With:
-*HTML
-*CSS
-*JavaScript
-*jQuery Library for appending to HTML
-*JSON
-*Google Firebase
-*Bootstrap(Mobile Responsive)
-*User Input Validations
+* HTML
+* CSS
+* JavaScript
+* jQuery Library for appending to HTML
+* JSON
+* Google Firebase
+* Bootstrap(Mobile Responsive)
+* User Input Validations
 
 
 
