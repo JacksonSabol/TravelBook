@@ -1,6 +1,3 @@
-// The * symbol precedes anything that needs fixing or needs something added to it
-// So you can ctrl or cmd f to find things that are lacking
-
 $(document).ready(function () {
 
   // // hide <div> with class of well on index.html when page loads
@@ -29,36 +26,34 @@ $(document).ready(function () {
   var auth = null;
   // Assign a variable to a blank string 'globally' so it can be reassigned when a user is authenticated (logged in)
   var userID = "";
-  // Pete: Google authentication (underneath Firebase authorization)
+  // Google authentication (underneath Firebase authorization)
   var provider = new firebase.auth.GoogleAuthProvider();
   provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
-  //  Pete: Authenticate with Google 'on-click'
+  //  Authenticate with Google 'on-click'
   $('#googleLogin').on('click', function signInGoogle() {
     firebase.auth().signInWithPopup(provider).then(function (result) {
       // This gives you a Google Access Token. You can use it to access the Google API.
       var token = result.credential.accessToken;
-      console.log(token);
+      // console.log(token);
       // The signed-in user info.
       var user = result.user;
-      console.log(user);
-      // ...
+      // console.log(user);
     }).catch(function (error) {
       // Handle Errors here.
       var errorCode = error.code;
-      console.log(errorCode);
+      // console.log(errorCode);
       var errorMessage = error.message;
-      console.log(errorMessage)
+      // console.log(errorMessage)
       // The email of the user's account used.
       var email = error.email;
       // The firebase.auth.AuthCredential type that was used.
       var credential = error.credential;
-      console.log(credential);
-      // ...
+      // console.log(credential);
     });
   });
 
-  // Register 
+  // Register with Firebase
   $('#registerForm').on('submit', function (e) {
     // Prevent default action of submitting form then refreshing the page
     e.preventDefault();
@@ -83,7 +78,7 @@ $(document).ready(function () {
         firebase.auth()
           .createUserWithEmailAndPassword(data.email, passwords.password)
           .then(function (user) {
-            return user.updateProfile({ // * Change this what Maira slacked out
+            return user.updateProfile({
               displayName: data.firstName + ' ' + data.lastName
             })
           })
@@ -94,16 +89,16 @@ $(document).ready(function () {
             usersRef.child(user.uid).set(data)
               .then(function () {
                 // Log that the user has been added with the user's UID
-                console.log("User Information Saved:", user.uid); // * change to modal with appendable span
+                // console.log("User Information Saved:", user.uid);
               })
           })
           .catch(function (error) { // Check for errors
-            console.log("Error creating user:", error); // * change to modal with appendable span
-            console.log("Error creating user:", error.code); // * change to modal with appendable span
+            // console.log("Error creating user:", error);
+            // console.log("Error creating user:", error.code);
           });
       } else {
         // Log that the password and confirm password didn't match
-        console.log("ERROR: Passwords didn't match"); // * Maybe change this to edit a span in the signUpModal to let user know more conveniently
+        // console.log("ERROR: Passwords didn't match");
       }
     }
   });
@@ -114,7 +109,7 @@ $(document).ready(function () {
     e.preventDefault();
     // Show the addToProfile modal
     $('#addToProfModal').modal('show');
-    // Set timeout on modal hiding function
+    // Set timeout to only show modal for 1.5 seconds
     setTimeout(addToProfileDone, 1000 * 1.5);
   });
 
@@ -142,11 +137,11 @@ $(document).ready(function () {
           // Reassign variable auth to the data returned by the Firebase authentication process (basically, so it's not null anymore)
           auth = authData;
           // Log that user is logged in
-          console.log("Successfully logged in");
+          // console.log("Successfully logged in");
         })
         .catch(function (error) { // Check for errors
-          console.log("Login Failed!", error);
-          console.log("Login Failed Code", error.code);
+          // console.log("Login Failed!", error);
+          // console.log("Login Failed Code", error.code);
           // Re-show loginModal if the login failed to authenticate
           $('#loginModal').modal('show');
         });
@@ -155,17 +150,16 @@ $(document).ready(function () {
 
   // Sign out using built-in Firebase function on click of logout button
   $('#logout').on('click', function (e) {
-    // Prevent default action of submitting form and refreshing page
-    // e.preventDefault();
+    // Allow default of refresh page to trigger .on('child_added') below
     // Sign user out
     firebase.auth().signOut();
     // Log that user successfully signed out
-    console.log("Succesfully signed out");
-    // * Add a way to update the <div> well √ removed <div> well from index
+    // console.log("Succesfully signed out");
   });
 
   // Open the loginSignUp modal when the button is clicked
   $('#loginSignUp').on('click', function (e) {
+    // Prevent default action of refreshing page
     e.preventDefault();
     // Show LogIn modal on click of login button
     $("#loginModal").modal('show');
@@ -181,7 +175,7 @@ $(document).ready(function () {
     // Check to make sure a user is signed in by comparing the value of the variable 'auth'
     // We reassign it to the user's data when the user logs in, otherwise it stays as 'null'
     if (auth != null) {
-      // Make sure Interest has a price associated with it on the Yelp API response
+      // Check if Interest has a price associated with it on the Yelp API response (restaurant versus general attraction)
       if ($(this).attr("data-price") == null) {
         // If the user is logged in, push/create a key (Firebase directory) with a value equal to an object of the information stored in the .add-button data attributes
         interestRef.child(auth.uid)
@@ -216,11 +210,11 @@ $(document).ready(function () {
       $("#loginModal").modal('show');
     }
   });
-  // ====================== Add interest end ====================== //
 
+  // ====================== Add interest end ====================== //
   // ====================== Append interest start ====================== //
 
-  // When the authentication state changes, run this function to append information - * currently none of this information exists in the Users object because something isn't working on line 56
+  // When the authentication state changes, run this function to append information - * 
   firebase.auth().onAuthStateChanged(function (user) {
     // If user data exists - i.e. the user is logged in
     if (user) {
@@ -260,8 +254,6 @@ $(document).ready(function () {
       });
       // Reassign userID to the user's unique Google UID so it can be used later ('global' scope)
       userID = user.uid;
-      // * Call a function onChildAdd that appends data to the DOM - bottom of the script but it currently isn't necessary; it will likely be useful in the future to change appended data on login/logout
-      interestRef.child(user.uid).on('child_added', onChildAdd);
     }
     else {
       // No user is signed in so change body class to auth-false - not obviously useful at present, but it's a carry over from the script we based this on
@@ -270,17 +262,13 @@ $(document).ready(function () {
       $("#logout").hide();
       // Show the Login/Sign Up button when user authentication fails
       $("#loginSignUp").show();
-      // * Call off the auth and the function onChildAdd that doesn't do anything yet so in the future, nothing would be appended
-      auth && interestRef.child(auth.uid).off('child_added', onChildAdd);
-      // Clear the <div> with id of user-name - * doesn't currently exist but we should add it
+      // Clear the <div> with id of user-name - * 
       $('#user-name').html('');
       // Reassign variable auth to null so we can reference that no one is logged in
       auth = null;
     }
   });
-
   // ====================== Append interest end ====================== //
-
 
   // Some APIs will give us a cross-origin (CORS) error. This small function is a fix for that error. You can also check out the chrome extenstion (https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en).
   jQuery.ajaxPrefilter(function (options) {
@@ -288,7 +276,6 @@ $(document).ready(function () {
       options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
     }
   });
-
 
   // --------------------- index page --------------------------------------------------------------------------------
   // Toggle Sign up Modal from loginModal if not a member
@@ -302,6 +289,7 @@ $(document).ready(function () {
 
   // Toggle Log in Modal from signUpModal if already a member
   $("body").on("click", "#toggleLogInModal", function () {
+    // Prevent the default action of refreshing the page
     event.preventDefault();
     // Hide loginModal
     $("#signUpModal").modal('hide');
@@ -315,18 +303,14 @@ $(document).ready(function () {
     // show <div> with class of well when submit button is clicked
     $(".well").show();
 
-    // Prevent the default action of submitting a form to stop page from refreshing
+    // Prevent the default action of refreshing the page
     event.preventDefault()
 
     // Assign local variables to the values the user's input (the location and category)
     var location = $("#location").val();
     var category = $("#category").val();
 
-    // Console.log() the values and see if they match what you entered into the form.
-    console.log(location);
-    console.log(category);
-
-    // Add conditionals to make sure the most imporatant field (location) is filled 
+    // Add conditionals to make sure the most imporatant field (location) is filled
     if (location === "") {
       // Show emptyField modal
       $('#emptyField').modal('show');
@@ -342,8 +326,6 @@ $(document).ready(function () {
           authorization: "Bearer zTc8hKel4T1UcSNchYEMflSNuuZ4B6NErA4ebwBx5NE2WCMlTAC8YOpimFb5osb45soTdnkhO0bi1841cHisFdjLD0ihQhs47ZQH6q4CfBj-wJJAZlzIa5btBYv4W3Yx",
         }
       }).then(function (response) {
-        // Log response for reference - Yelp API returns lots of good information
-        console.log(response)
         // Empty the <div> with class of well to make room for new results - better than prepending at the end because prepending puts them in opposite order of relevance
         $(".well").empty();
         // Loop through the results
@@ -412,8 +394,6 @@ $(document).ready(function () {
           }
           // Add Bootstrap plus sign class to span
           addSpan.addClass("glyphicon glyphicon-plus-sign");
-          // * Maybe ** Add hide function to span - can hide the entry after clicking so user doesn't see it anymore - not a priority
-          addSpan.attr("aria-hidden", "true");
           // Append span to rightCell
           addBtn.append(addSpan);
           // Append button to rightCell
@@ -431,88 +411,20 @@ $(document).ready(function () {
     }
   });
 
-  // Google Places API Information
-  // This example requires the Places library. Include the libraries=places
-  // // parameter when you first load the API. For example:
-  // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8&libraries=places"></script>
-
-  // https://maps.googleapis.com/maps/api/place/nearbysearch/json
-  //   ?location=-33.8670522,151.1957362
-  //   &radius=500
-  //   &types=food
-  //   &name=harbour
-  //   &key=AIzaSyBQHbqilN4MFV6-QYxw3-Xay9BJbPBZvt8
-
-  // function initMap() {
-  //   var map = new google.maps.Map(document.getElementById('map'), {
-  //     center: {lat: -33.866, lng: 151.196},
-  //     zoom: 15
-  //   });
-  // console.log("hello");
-
-  //   var infowindow = new google.maps.InfoWindow();
-  //   var service = new google.maps.places.PlacesService(map);
-
-  //   service.getDetails({
-  //     placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
-  //   }, function(place, status) {
-  //     if (status === google.maps.places.PlacesServiceStatus.OK) {
-  //       var marker = new google.maps.Marker({
-  //         map: map,
-  //         position: place.geometry.location
-  //       });
-  //       google.maps.event.addListener(marker, 'click', function() {
-  //         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-  //           'Place ID: ' + place.place_id + '<br>' +
-  //           place.formatted_address + '</div>');
-  //         infowindow.open(map, this);
-  //       });
-  //     }
-  //   });
-  // }
-
   // ------------------------------------ profile page ------------------------------------
 
   // Append firebase data to profile page
   // Create Firebase event to listen for the addition of a new 'Interest' to the database
   interestRef.on('child_added', function (firstChildSnapshot) {
-    // For testing purposes: log the key of the first child in the 'Interests' directory
-    console.log("First: " + firstChildSnapshot.key); // It logs the user UID, which is the first thing we push to on line 140
     // Add conditional to only loop through the second children if the tree name matches the user's UID
-    // userID defined as empty string inside document.ready function (line 29), then reassigned on line 192 when the auth state changes (user logs in)
-    console.log("User ID: " + userID);
+    // userID defined as empty string inside document.ready function, then reassigned when the auth state changes (user logs in)
     // Limit what gets appended to only things associated with the logged in user
     if (firstChildSnapshot.key === userID) {
       firstChildSnapshot.forEach(function (secondChildSnapshot) {
         // Loop through the child folders whose names (keys) are assigned by Google Firebase upon creation
-        // Fun fact: their key name includes a time stamp so Google can order them
-        // Other fun fact: they contain 72 random bits of entropy, which is a lot considering I have less than that as a Boltzmann brain
-        console.log("Second: " + secondChildSnapshot.key); // logs the DataSnapshot key created by Firebase
-        console.log("Second Child Biz Name: " + secondChildSnapshot.val().name); // outputs the business name!
-
+        // Their key name contains 72 bits of entropy so we don't want to attempt guess their names - we just want to loop through all of them
         // Assign variable to hold the value of the database key/value pairs for each parameter of an Interest
         var interestReturned = secondChildSnapshot.val();
-        // Assign a variable to create a BootStrap autolayout row to append Interests to
-        // var newRowInterestCity = $("<div class ='row'>");
-        // Assign a variable to hold an anchor tag with an h2 tag with City Name - direct href of anchor tag to open collapsible list
-        // var newAnchor = $("<a>").attr("href", "#").html("<h2 id= " + interestReturned.businessCity + "'>" + interestReturned.businessCity + "</h2>");
-
-        // Loop through every business City 
-        // for (var i=0; i < interestReturned.businessCity.length) {
-
-        // }
-        // Are duplicates code drill
-        // If the business city is the same for multiple interests, add all of those interests to the same businessCity list
-        // If there are duplicates, meaning there are multiple interests with the same businessCity, assign the values at those indices to an array?
-        // var duplicateCity = [];
-        // if (interestReturned.businessCity)
-
-        // call on function that holds all city name
-
-        // for loop to loop through all city names and append them to the page
-        // for (var i=0; i < duplicateCity.length) {
-        // row.append($("<p>").attr("class", "data-city").text(duplicateCity);
-
         // Assign a variable to create BootStrap autolayout columns to hold HTML framework then append to page
         var newBSColDiv = $("<div class ='col-lg-12 col-md-12 col-sm-12 col-12'>"); //class ='col-lg-2 col-md-3 col-sm-6 col-12'> or "col-6 col-sm-3"
         // Assign a variable to create an anchor tag to wrap around bucket photo and title
@@ -523,65 +435,12 @@ $(document).ready(function () {
         newAnchor.prepend(newImg);
         // Append newAnchor to BootStrap Div
         newBSColDiv.append(newAnchor);
-        // Append business address to new Anchor
-        // newBSColDiv.append($("<p>").text(interestReturned.phone));
-        // Append business address to new Anchor
-        // newBSColDiv.append($("<p>").text(interestReturned.address));
         // Append newDiv to class of buckets in container
         $(".buckets").append(newBSColDiv);
-        //   //show only restaurants in SF--testing
-        // $('#Denver').show();
-        // $('#San Francisco').hide();
       });
     }
     else {
       // do nothing, because we don't want data that's not associated with the logged-in user's UID
     }
   });
-
-  // PETE: Allow user to upload a photo to page
-  //   var uploader = document.getElementById('#file-select');
-  //   var uploadButton = document.getElementById('#file-submit');
-
-  //   uploadButton.addEventListener('change', function (e) {
-  //     // Get file
-  //     var profilePhoto = e.target.files[0];
-  //     // Create storage ref
-  //     var storageRef = firebase.storage().ref('profile_photos/' + file.name);
-  //     // Upload file
-  //     storageRef.put(file);
-  //     // Update progress bar
-  //     task.on('state_changed',
-  //       function progress(snapshot) {
-  //         var percentage = (snapshot.bytesTransferred /
-  //           snapshot.totalbytes) * 100;
-  //         uploader.value = percentage;
-  //       },
-  //       function error(err) {
-  //       },
-  //       function complete() {
-
-  //       })
-  //   })
 });
-
-// * Future function to call to append data to profile page
-function onChildAdd(snap) {
-  // Calls function below which also doesn't do anything yet - notice it's appending to an id of buckets, not a class of buckets
-  $('#buckets').append(interestHTMLFromObject(snap.key, snap.val()));
-}
-
-// * Future function to call to append data to the profile page
-function interestHTMLFromObject(key, interest) {
-  return '<div class ="col-lg-2 col-md-3 col-sm-6 col-12" id="' + key + '">'
-    + '<h3>' + interest.businessCity + '</h3>'
-    + '<a href="' + interest.businessURL + '">' + interest.name + '</a>'
-    + '<img src="assets/photos/sf-icon.jpg" class="city-thumbnail" alt="' + interest.businessCity + '">'
-    + '</div>';
-}
-// interestHTMLFromObject(key, interest);
-// Data format
-//     name: $(this).attr("data-biz-name"),
-//     phone: $(this).attr("data-biz-phone"),
-//     businessID: $(this).attr("data-id"),
-//     businessCity: $(this).attr("data-city")
