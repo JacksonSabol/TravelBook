@@ -173,3 +173,55 @@ function spanText(textStr, textClasses) {
     var classNames = textClasses.map(c => 'text-' + c).join(' ');
     return '<span class="' + classNames + '">' + textStr + '</span>';
 }
+
+
+
+// Register 
+$('#registerForm').on('submit', function (e) {
+    // Prevent default action of submitting form then refreshing the page
+    e.preventDefault();
+    // Hide the signUpModal
+    $('#signUpModal').modal('hide');
+    // Assign a variable locally to hold the data entered into the sign up form
+    var data = {
+      email: $('#registerEmail').val(), // Get the email
+      firstName: $('#registerFirstName').val(), // Get firstName
+      lastName: $('#registerLastName').val(), // Get lastName
+    };
+    // Assign a variable locally to hold the password data for comparison
+    var passwords = {
+      password: $('#registerPassword').val(), // Get the password
+      cPassword: $('#registerConfirmPassword').val(), // Get the confirm password
+    }
+    // Make sure none of the fields important to logging in are empty
+    if (data.email != '' && passwords.password != '' && passwords.cPassword != '') {
+      // If they're filled, check if the passwords match
+      if (passwords.password == passwords.cPassword) {
+        // Create the user if the passwords match, sending the email and password to Google Firebase's build-in authentication system
+        firebase.auth()
+          .createUserWithEmailAndPassword(data.email, passwords.password)
+          .then(function (user) {
+            return user.updateProfile({ // * Change this what Maira slacked out
+              displayName: data.firstName + ' ' + data.lastName
+            })
+          })
+          .then(function (user) {
+            // Reassign variable auth to the user information so that user needs to be logged in to save data
+            auth = user;
+            // Save the profile data
+            usersRef.child(user.uid).set(data)
+              .then(function () {
+                // Log that the user has been added with the user's UID
+                console.log("User Information Saved:", user.uid); // * change to modal with appendable span
+              })
+          })
+          .catch(function (error) { // Check for errors
+            console.log("Error creating user:", error); // * change to modal with appendable span
+            console.log("Error creating user:", error.code); // * change to modal with appendable span
+          });
+      } else {
+        // Log that the password and confirm password didn't match
+        console.log("ERROR: Passwords didn't match"); // * Maybe change this to edit a span in the signUpModal to let user know more conveniently
+      }
+    }
+  });
