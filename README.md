@@ -2,20 +2,27 @@
 
 ## Project One
 
-# Jackson Sabol, Christie Byrne, Pete Widders, Maira Jimenez
+## Jackson Sabol, Christie Byrne, Pete Widders, Maira Jimenez
 
 
 ### Overview
- We employed HTML, CSS, JavaScript, Bootstrap, jQuery, JSON, Google Firebase and AJAX HTTP requests to generate the Travelbook app where users can create an account and build their own travel profile. Users are able to search and add their favorite restaurant/activities from cities they have previously visited to their profile page. Our overall concenpt and development of this app is that we believe when people travel to a new place they are more inclined to ask the opinion of someone they know such as a friend or family member for recommendations rather than asking online and reading a stranger's review. We believe there isn't a user-friendly platform at the moment where users are able to build a travel profile and share their travel recommendations with others. We think this app would also be a great personal tool for people who love to travel  to have a space and keep track of all the places they've visited and would want to re-visit. 
+  We created Travelbook, an app where users can build their own travel profile, full of the places they love, that they want to re-visit or recommend to other friends and family members. From our experiences, travelers value their friends and family's advice over strangers on the internet, so we created a platform to help them share these recommendations.
 
- ### Setting up firebase for Authentication/Registration
-*Firebase
+ Our application eliminates the need for writing down restaurant names to remember on napkins that you will inevitably lose, and disorganized lists in your phone that are a headache to search through! 
+ 
+  We used HTML, CSS, JavaScript, Bootstrap, jQuery, JSON, Google Firebase and AJAX HTTP requests to let users search using Yelp, and then append their findings to their profile, with the help of Firebase for authentication and snapshots.
+
+This app will automatically sort and store all of your favorite places to visit, with a few clicks of a button. In our Beta version, users will be searchable by username, similar to Spotify or Pinterest, to enable an easy-sharing feature.
+
+
+ ### Setting up Firebase for Authentication/Registration
 
 ![alt text](assets/photos/firebase.png)
 
  ### Sign Up Functionality
 
-Assigned two local variables to hold the data entered, first variable is var data which holds the users email, as well as their first and last name. Second we have var passwords, which holds the password they create and the password confirmation. Below we have two if statements, the first one makes sure all required fields are not left empty. The second if statement makes sure the new password created and the password confirmation match and if this is true it creates a new user. We also added the goggle log in functionality where users are able to log in using their gmail account. 
+We assigned two local variables to hold the data entered, first variable is `data` which holds the users email, as well as their first and last name. We also have a variable called `passwords`, which holds the password they create and the password confirmation. Below we have two if statements, the first one makes sure all required fields are not left empty. The second `if statement` makes sure the new password created and the password confirmation match and if this is true it creates a new user. We also added the Google log in functionality where users are able to log in using their Gmail account. 
+
 ![alt text](assets/photos/signup.png)
 
 ### Log In Authentication
@@ -26,7 +33,7 @@ When user wants to log in we send an authentication request to firebase to check
  ### To Research Restarurants and Location 
 <ul>
  <li>Yelp API</li>
- <li>Google API</li>
+ <li>Google Software Development Kit-Google Cloud API</li>
 </ul>
 
 ![alt text](assets/photos/searchbar.png)
@@ -36,23 +43,24 @@ When user wants to log in we send an authentication request to firebase to check
 When the plus button next to a restaurant is clicked, push this interest to Firebase database. 
 
 ![alt text](assets/photos/addrestaurant.png)
-Thank you for reading! 
+
+
 ### Link to Deployed Version
 
 [https://jacksonsabol.github.io/Project_One/]
 
 ### Built With:
-*HTML
-*CSS
-*JavaScript
-*jQuery Library for appending to HTML
-*JSON
-*Google Firebase
-*Bootstrap(Mobile Responsive)
-*User Input Validations
+* HTML
+* CSS
+* JavaScript
+* jQuery Library for appending to HTML
+* JSON
+* Google Firebase
+* Bootstrap(Mobile Responsive)
+* User Input Validations
 
 
-
+## Thank you for reading! 
 
 
 
