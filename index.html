@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="google-signin-client_id" content="329432180812-j5jie5pqjehkhoutg3qkuq7aohnsntl0.apps.googleusercontent.com">
   <title>TravelBook</title>
   <link rel="stylesheet" href="assets/css/reset.css" type="text/css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -18,8 +19,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Mali|Raleway" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhJlQHvH5eKFMF847xmHIf3-cktkOPwJA&libraries=places"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
 
 
 
@@ -88,8 +89,8 @@
               <label for="psw">Password</label>
               <input type="password" class="form-control" id="loginPassword" placeholder="Enter password">
             </div>
-            <button type="submit" class="login-button" id="doLogin">
-              Login</button>
+            <button type="submit" class="login-button" id="doLogin">Login</button>
+            <button type="submit" class="google-login-button" id="googleLogin">Login with Google</button>
           </form>
         </div>
       </div>
@@ -128,6 +129,7 @@
               <input type="password" class="form-control" id="registerConfirmPassword">
             </div>
             <button type="submit" class="login-button" id="doRegister">Register</button>
+            <button type="submit" class="login-button" id="googleLogin">Login with Google</button>
           </form>
         </div>
       </div>

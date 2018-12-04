@@ -13,7 +13,9 @@ $(document).ready(function () {
     databaseURL: "https://travelbook-1543375707755.firebaseio.com",
     projectId: "travelbook-1543375707755",
     storageBucket: "travelbook-1543375707755.appspot.com",
-    messagingSenderId: "329432180812"
+    messagingSenderId: "329432180812",
+    // Google Oauth client ID and discovery docs
+    clientId: "329432180812-j5jie5pqjehkhoutg3qkuq7aohnsntl0.apps.googleusercontent.com"
   };
   firebase.initializeApp(config);
 
@@ -27,6 +29,34 @@ $(document).ready(function () {
   var auth = null;
   // Assign a variable to a blank string 'globally' so it can be reassigned when a user is authenticated (logged in)
   var userID = "";
+  // Pete: Google authentication (underneath Firebase authorization)
+  var provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+
+  //  Pete: Authenticate with Google 'on-click'
+  $('#googleLogin').on('click', function signInGoogle() {
+    firebase.auth().signInWithPopup(provider).then(function (result) {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = result.credential.accessToken;
+      console.log(token);
+      // The signed-in user info.
+      var user = result.user;
+      console.log(user);
+      // ...
+    }).catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      console.log(errorCode);
+      var errorMessage = error.message;
+      console.log(errorMessage)
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      console.log(credential);
+      // ...
+    });
+  });
 
   // Register 
   $('#registerForm').on('submit', function (e) {
@@ -151,19 +181,35 @@ $(document).ready(function () {
     // Check to make sure a user is signed in by comparing the value of the variable 'auth'
     // We reassign it to the user's data when the user logs in, otherwise it stays as 'null'
     if (auth != null) {
-      // If the user is logged in, push/create a key (Firebase directory) with a value equal to an object of the information stored in the .add-button data attributes
-      interestRef.child(auth.uid)
-        .push({
-          name: $(this).attr("data-biz-name"),
-          phone: $(this).attr("data-biz-phone"),
-          address: $(this).attr("data-biz-address"),
-          businessID: $(this).attr("data-id"),
-          businessCity: $(this).attr("data-city"),
-          businessURL: $(this).attr("data-biz-url"),
-          bizImgURL: $(this).attr("data-img-url"),
-          bizPrice: $(this).attr("data-price"),
-          bizCategory: $(this).attr("data-category")
-        });
+      // Make sure Interest has a price associated with it on the Yelp API response
+      if ($(this).attr("data-price") == null) {
+        // If the user is logged in, push/create a key (Firebase directory) with a value equal to an object of the information stored in the .add-button data attributes
+        interestRef.child(auth.uid)
+          .push({
+            name: $(this).attr("data-biz-name"),
+            phone: $(this).attr("data-biz-phone"),
+            address: $(this).attr("data-biz-address"),
+            businessID: $(this).attr("data-id"),
+            businessCity: $(this).attr("data-city"),
+            businessURL: $(this).attr("data-biz-url"),
+            bizImgURL: $(this).attr("data-img-url"),
+            bizCategory: $(this).attr("data-category")
+          });
+      }
+      else {
+        interestRef.child(auth.uid)
+          .push({
+            name: $(this).attr("data-biz-name"),
+            phone: $(this).attr("data-biz-phone"),
+            address: $(this).attr("data-biz-address"),
+            businessID: $(this).attr("data-id"),
+            businessCity: $(this).attr("data-city"),
+            businessURL: $(this).attr("data-biz-url"),
+            bizImgURL: $(this).attr("data-img-url"),
+            bizPrice: $(this).attr("data-price"),
+            bizCategory: $(this).attr("data-category")
+          });
+      }
     }
     // If user is not logged in, auth=null, and show them the log in modal
     else {
@@ -346,8 +392,6 @@ $(document).ready(function () {
           // Add business ID to button to add to Firebase on click of plus sign
           addBtn.attr("data-longitude", businessLongitude);
           // Add business ID to button to add to Firebase on click of plus sign
-          addBtn.attr("data-price", businessPrice);
-          // Add business ID to button to add to Firebase on click of plus sign
           addBtn.attr("data-id", businessID);
           // Add business city to button to add to Firebase on click of plus sign
           addBtn.attr("data-city", businessCity);
@@ -361,6 +405,11 @@ $(document).ready(function () {
           addBtn.attr("data-biz-url", businessURL);
           // Add imgURL to button to add to firebase on click of plus sign
           addBtn.attr("data-img-url", imgURL);
+          // Add business ID to button to add to Firebase on click of plus sign
+          // Check to see if business has a price associated with it before assigning an undefined value to the data-id
+          if (businessPrice != null) {
+            addBtn.attr("data-price", businessPrice);
+          }
           // Add Bootstrap plus sign class to span
           addSpan.addClass("glyphicon glyphicon-plus-sign");
           // * Maybe ** Add hide function to span - can hide the entry after clicking so user doesn't see it anymore - not a priority
@@ -447,22 +496,22 @@ $(document).ready(function () {
         // var newRowInterestCity = $("<div class ='row'>");
         // Assign a variable to hold an anchor tag with an h2 tag with City Name - direct href of anchor tag to open collapsible list
         // var newAnchor = $("<a>").attr("href", "#").html("<h2 id= " + interestReturned.businessCity + "'>" + interestReturned.businessCity + "</h2>");
-        
+
         // Loop through every business City 
         // for (var i=0; i < interestReturned.businessCity.length) {
-          
+
         // }
         // Are duplicates code drill
         // If the business city is the same for multiple interests, add all of those interests to the same businessCity list
         // If there are duplicates, meaning there are multiple interests with the same businessCity, assign the values at those indices to an array?
         // var duplicateCity = [];
         // if (interestReturned.businessCity)
-        
+
         // call on function that holds all city name
 
         // for loop to loop through all city names and append them to the page
         // for (var i=0; i < duplicateCity.length) {
-          // row.append($("<p>").attr("class", "data-city").text(duplicateCity);
+        // row.append($("<p>").attr("class", "data-city").text(duplicateCity);
 
         // Assign a variable to create BootStrap autolayout columns to hold HTML framework then append to page
         var newBSColDiv = $("<div class ='col-lg-12 col-md-12 col-sm-12 col-12'>"); //class ='col-lg-2 col-md-3 col-sm-6 col-12'> or "col-6 col-sm-3"
@@ -491,29 +540,29 @@ $(document).ready(function () {
   });
 
   // PETE: Allow user to upload a photo to page
-//   var uploader = document.getElementById('#file-select');
-//   var uploadButton = document.getElementById('#file-submit');
+  //   var uploader = document.getElementById('#file-select');
+  //   var uploadButton = document.getElementById('#file-submit');
 
-//   uploadButton.addEventListener('change', function (e) {
-//     // Get file
-//     var profilePhoto = e.target.files[0];
-//     // Create storage ref
-//     var storageRef = firebase.storage().ref('profile_photos/' + file.name);
-//     // Upload file
-//     storageRef.put(file);
-//     // Update progress bar
-//     task.on('state_changed',
-//       function progress(snapshot) {
-//         var percentage = (snapshot.bytesTransferred /
-//           snapshot.totalbytes) * 100;
-//         uploader.value = percentage;
-//       },
-//       function error(err) {
-//       },
-//       function complete() {
+  //   uploadButton.addEventListener('change', function (e) {
+  //     // Get file
+  //     var profilePhoto = e.target.files[0];
+  //     // Create storage ref
+  //     var storageRef = firebase.storage().ref('profile_photos/' + file.name);
+  //     // Upload file
+  //     storageRef.put(file);
+  //     // Update progress bar
+  //     task.on('state_changed',
+  //       function progress(snapshot) {
+  //         var percentage = (snapshot.bytesTransferred /
+  //           snapshot.totalbytes) * 100;
+  //         uploader.value = percentage;
+  //       },
+  //       function error(err) {
+  //       },
+  //       function complete() {
 
-//       })
-//   })
+  //       })
+  //   })
 });
 
 // * Future function to call to append data to profile page
