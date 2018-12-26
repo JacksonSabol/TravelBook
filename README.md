@@ -47,7 +47,7 @@ When the plus button next to a restaurant is clicked, push this interest to Fire
 
 ### Link to Deployed Version
 
-[https://jacksonsabol.github.io/Project_One/]
+[Link to TravelBook](https://jacksonsabol.github.io/TravelBook/)
 
 ### Built With:
 * HTML
@@ -55,8 +55,9 @@ When the plus button next to a restaurant is clicked, push this interest to Fire
 * JavaScript
 * jQuery Library for appending to HTML
 * JSON
+* AJAX
 * Google Firebase
-* Bootstrap(Mobile Responsive)
+* Bootstrap (Mobile Responsive)
 * User Input Validations
 
 
